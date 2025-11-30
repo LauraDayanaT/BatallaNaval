@@ -1,0 +1,24 @@
+.pane-celda {
+    -fx-border-color: black;
+    -fx-background-color: lightgrey;
+}
+
+.pane-celda:hover {
+    -fx-background-color: lightgreen;
+}
+
+.barco {
+    -fx-background-color: grey;
+}
+
+.agua {
+    -fx-background-color: blue;
+}
+
+.tocado {
+    -fx-background-color: yellow;
+}
+
+.hundido {
+    -fx-background-color: red;
+}
