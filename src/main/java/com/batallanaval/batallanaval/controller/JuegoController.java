@@ -1,4 +1,4 @@
-package com.batallanaval.controller;
+package com.batallanaval.batallanaval.controller;
 
 import com.batallanaval.model.*;
 import javafx.fxml.FXML;

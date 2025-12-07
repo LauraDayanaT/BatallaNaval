@@ -8,8 +8,9 @@ import javafx.stage.Stage;
 public class BatallaNavalApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
+
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/com/batallanaval/batallanaval/view/JuegoView.fxml")
+                getClass().getResource("/com/batallanaval/batallanaval/view/ViewJugador.fxml")
         );
 
         Scene scene = new Scene(loader.load());
@@ -17,3 +18,9 @@ public class BatallaNavalApp extends Application {
         stage.show();
     }
 }
+
+// ACCEDER A LA INTERFAZ DE LAURA
+      /* FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/com/batallanaval/batallanaval/view/JuegoView1.fxml")
+        );
+    */
