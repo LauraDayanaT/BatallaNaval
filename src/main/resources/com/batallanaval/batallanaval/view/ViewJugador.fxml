@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/24.0.1"
+            prefHeight="700.0"
+            prefWidth="900.0"
+            style="-fx-background-color: #F0F0F0;"
+            fx:controller="com.batallanaval.batallanaval.controller.tableroJugadorController"
+            stylesheets="@styles.css">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20" />
+    </padding>
+
+    <center>
+        <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+            <!--
+                AJUSTE DE TAMAÑO:
+                11 columnas × 50px = 550px (columnas de juego)
+                + 40px (columna de encabezados) = 590px mínimo
+                Mismo cálculo para filas
+            -->
+            <GridPane fx:id="GridPanel100"
+                      maxHeight="600.0"
+                      maxWidth="600.0"
+                      minHeight="600.0"
+                      minWidth="600.0"
+                      prefHeight="600.0"
+                      prefWidth="600.0"
+                      style="-fx-background-color: #40E0D0; -fx-border-color: #333333; -fx-border-width: 2; -fx-border-radius: 5;"
+                      VBox.vgrow="NEVER">
+
+                <!-- Las ColumnConstraints y RowConstraints se definirán dinámicamente en el controlador -->
+
+            </GridPane>
+        </VBox>
+    </center>
+
+</BorderPane>

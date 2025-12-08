@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.Objects;
+
 public class BatallaNavalApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
@@ -14,7 +16,10 @@ public class BatallaNavalApp extends Application {
         );
 
         Scene scene = new Scene(loader.load());
+        stage.setTitle("Batalla Naval");
         stage.setScene(scene);
+        stage.getIcons().add(new javafx.scene.image.Image(
+                Objects.requireNonNull(getClass().getResource("/com/batallanaval/batallanaval/view/buque-de-guerra.png")).toExternalForm()));
         stage.show();
     }
 }

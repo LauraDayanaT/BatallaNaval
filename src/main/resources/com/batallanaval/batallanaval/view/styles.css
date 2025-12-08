@@ -1,0 +1,11 @@
+#GridPanel100{
+    -fx-background-image: url("water.png");
+    -fx-background-size: cover;      /* Ajusta la imagen */
+    -fx-background-repeat: no-repeat;
+}
+
+#tableroOponente {
+    -fx-background-image: url("/images/mar.png");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+}

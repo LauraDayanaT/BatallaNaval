@@ -72,6 +72,9 @@ public class tableroJugadorController {
         for (int c = 0; c < GRID_SIZE; c++) {
             Label header = new Label(COL_HEADERS[c]);
             header.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+            header.setTextFill(Color.WHITE);
+            header.setStyle("-fx-effect: dropshadow(gaussian, black, 3, 0.5, 0, 0);");
+
             GridPane.setConstraints(header, c + 1, 0); // Posición: columna (1 a 10), fila 0
             GridPanel100.getChildren().add(header);
             GridPane.setHalignment(header, HPos.CENTER);
@@ -82,6 +85,8 @@ public class tableroJugadorController {
         for (int r = 0; r < GRID_SIZE; r++) {
             Label header = new Label(String.valueOf(r + 1));
             header.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+            header.setTextFill(Color.WHITE);
+            header.setStyle("-fx-effect: dropshadow(gaussian, black, 3, 0.5, 0, 0);");
             GridPane.setConstraints(header, 0, r + 1); // Posición: columna 0, fila (1 a 10)
             GridPanel100.getChildren().add(header);
             GridPane.setHalignment(header, HPos.CENTER);
@@ -108,9 +113,9 @@ public class tableroJugadorController {
     private StackPane createCell(int row, int col) {
         StackPane cell = new StackPane();
         // Estilo de la casilla de agua (similar al ejemplo, color celeste)
-        final String BASE_STYLE = "-fx-background-color: #7EC0EE; -fx-border-color: #0077BE; -fx-border-width: 0.5;";
+        final String BASE_STYLE = "-fx-background-color: transparent; -fx-border-color: white; -fx-border-width: 1.5;";
         // Estilo cuando el mouse está encima (un azul ligeramente más claro)
-        final String HOVER_STYLE = "-fx-background-color: #A9D0F5; -fx-border-color: #0077BE; -fx-border-width: 1.5;";
+        final String HOVER_STYLE = "-fx-background-color: #004D99; -fx-border-color: #0077BE; -fx-border-width: 1.5;";
 
         cell.setStyle(BASE_STYLE);
         // Establecer el tamaño preferido de la celda al mismo tamaño que la restricción de fila/columna.
