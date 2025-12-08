@@ -2,6 +2,11 @@ package com.batallanaval.batallanaval.controller;
 
 import com.batallanaval.model.*;
 import com.batallanaval.model.TipoBarco;  // Import del ENUM
+
+import com.batallanaval.batallanaval.exceptions.PosicionInvalidaException;
+import com.batallanaval.batallanaval.exceptions.BarcoSuperpuestoException;
+import com.batallanaval.batallanaval.exceptions.BarcoFueraLimitesException;
+
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -12,7 +17,7 @@ import javafx.scene.layout.VBox;
  * Maneja la lógica del juego, interacción del usuario y comunicación entre modelo y vista.
  * Implementa la historia de usuario HU-1 (colocación de barcos) y HU-2 (realización de disparos).
  *
- * @author [Tu Nombre]
+ *
  * @version 1.0
  */
 public class JuegoController {
@@ -166,17 +171,48 @@ public class JuegoController {
             return;
         }
 
-        // Intentar colocar el barco en el tablero (horizontal por defecto)
-        if (jugador.getTablero().colocarBarco(barco, fila, col, true)) {
-            // Colocación exitosa
-            celda.getStyleClass().add("barco");
-            panelBarcos.getChildren().remove(barcoPane);
-            System.out.println("✅ Barco colocado: " + barco.getNombre() + " en (" + fila + "," + col + ")");
-        } else {
-            // Colocación fallida (superposición o fuera de límites)
-            celda.setStyle("-fx-background-color: red;");
-            System.out.println("❌ No se pudo colocar el barco en (" + fila + "," + col + ")");
+        try {
+            // Intentar colocar el barco en el tablero (horizontal por defecto)
+            boolean colocado = jugador.getTablero().colocarBarco(barco, fila, col, true);
+
+            if (colocado) {
+                // Si llegamos aquí, la colocación fue exitosa
+                celda.getStyleClass().add("barco");
+                panelBarcos.getChildren().remove(barcoPane);
+                System.out.println("✅ Barco colocado: " + barco.getNombre() + " en (" + fila + "," + col + ")");
+            } else {
+                // Colocación fallida (esto no debería pasar si usamos excepciones)
+                celda.setStyle("-fx-background-color: red;");
+                System.out.println("❌ No se pudo colocar el barco en (" + fila + "," + col + ")");
+            }
+
+        } catch (RuntimeException e) {
+            // Captura todas las excepciones NO MARCADAS (RuntimeException)
+            if (e instanceof PosicionInvalidaException) {
+                celda.setStyle("-fx-background-color: orange; -fx-border-color: darkorange;");
+                System.err.println("🚫 Posición inválida: " + e.getMessage());
+            } else if (e instanceof BarcoFueraLimitesException) {
+                celda.setStyle("-fx-background-color: purple; -fx-border-color: darkviolet;");
+                System.err.println("🚫 " + e.getMessage());
+            } else {
+                celda.setStyle("-fx-background-color: gray;");
+                System.err.println("⚠️ Error de runtime: " + e.getMessage());
+            }
+        } catch (Exception e) {
+            // Captura cualquier otra excepción (incluye BarcoSuperpuestoException si es Checked)
+            celda.setStyle("-fx-background-color: darkred;");
+            System.err.println("⚠️ Error general: " + e.getMessage());
         }
+    }
+
+    // Método auxiliar para mostrar errores (podría ser un Alert de JavaFX)
+    private void mostrarError(String titulo, String mensaje) {
+        System.err.println("ERROR [" + titulo + "]: " + mensaje);
+        // TODO: Implementar Alert de JavaFX
+        // Alert alert = new Alert(Alert.AlertType.ERROR);
+        // alert.setTitle(titulo);
+        // alert.setContentText(mensaje);
+        // alert.showAndWait();
     }
 
     /**
@@ -188,9 +224,8 @@ public class JuegoController {
      * @param celda Celda visual donde se hizo clic
      */
     private void disparar(int fila, int col, Pane celda) {
-        // Obtener la matriz de barcos del tablero de la máquina
-        Barco[][] t = maquina.getTablero().getTablero();
-        Barco b = t[fila][col];
+        // Obtener el barco en la posición del tablero de la máquina
+        Barco b = maquina.getTablero().getBarcoEn(fila, col);
 
         if (b == null) {
             // Disparo al agua
@@ -198,34 +233,18 @@ public class JuegoController {
             celda.setDisable(true);
             System.out.println("🌊 AGUA en (" + fila + "," + col + ")");
 
-            // Aquí debería pasar el turno a la máquina (por implementar)
-            // turnoMaquina();
+            // Registrar el disparo en el tablero de la máquina
+            maquina.getTablero().recibirDisparo(fila, col);
         } else {
-            // Hay un barco en la posición
-            boolean tocado = false;
+            // Hay un barco en la posición - usar el nuevo método
+            String resultado = maquina.getTablero().recibirDisparo(fila, col);
 
-            // Buscar la posición relativa en el barco
-            // NOTA: Esta lógica necesita mejorar para encontrar la posición exacta
-            for (int i = 0; i < b.getTamaño(); i++) {
-                if (b.recibirDisparo(i)) {
-                    tocado = true;
-                    break;
-                }
-            }
-
-            if (b.estaHundido()) {
-                // Barco hundido
+            if (resultado.equals("HUNDIDO")) {
                 celda.getStyleClass().add("hundido");
                 System.out.println("💥 HUNDIDO " + b.getNombre() + " en (" + fila + "," + col + ")");
-
-                // El jugador sigue disparando
-                // TODO: Verificar si ganó el juego
-            } else if (tocado) {
-                // Barco tocado
+            } else if (resultado.equals("TOCADO")) {
                 celda.getStyleClass().add("tocado");
                 System.out.println("🔥 TOCADO en (" + fila + "," + col + ")");
-
-                // El jugador sigue disparando
             }
             celda.setDisable(true);
         }
