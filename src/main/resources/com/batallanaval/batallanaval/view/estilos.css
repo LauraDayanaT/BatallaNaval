@@ -1,24 +1,155 @@
+/* ========== ESTILOS PARA JUEGO COMPLETO (JuegoView.fxml) ========== */
+
+/* 1. FONDO PRINCIPAL */
+.anchor-pane {
+    -fx-background-color: linear-gradient(to bottom, #1a2980, #26d0ce);
+    -fx-background-image: url("maritime.png");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+}
+
+/* 2. TABLEROS */
+.grid-pane {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-border-color: #2c3e50;
+    -fx-border-width: 3;
+    -fx-border-radius: 5;
+}
+
+/* Celdas de tablero */
 .pane-celda {
-    -fx-border-color: black;
-    -fx-background-color: lightgrey;
+    -fx-border-color: rgba(255, 255, 255, 0.5);
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-background-color: rgba(135, 206, 235, 0.7); /* Celeste para agua */
 }
 
+/* Celdas del jugador (tablero izquierdo) */
+#tableroJugador .pane-celda {
+    -fx-background-color: rgba(135, 206, 235, 0.7);
+    -fx-background-image: url("water.png");
+    -fx-background-size: cover;
+}
+
+/* Celdas del oponente (tablero derecho) */
+#tableroOponente .pane-celda {
+    -fx-background-color: rgba(70, 130, 180, 0.7);
+    -fx-background-image: url("water.png");
+    -fx-background-size: cover;
+}
+
+/* Efecto hover */
 .pane-celda:hover {
-    -fx-background-color: lightgreen;
+    -fx-background-color: rgba(144, 238, 144, 0.7); /* Verde claro */
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
 }
 
-.barco {
-    -fx-background-color: grey;
-}
-
+/* 3. ESTADOS DE DISPARO */
 .agua {
-    -fx-background-color: blue;
+    -fx-background-color: rgba(30, 144, 255, 0.8) !important; /* Azul Dodger */
+    -fx-border-color: #0000FF;
+    -fx-border-width: 2;
 }
 
 .tocado {
-    -fx-background-color: yellow;
+    -fx-background-color: rgba(255, 69, 0, 0.8) !important; /* Rojo Naranja */
+    -fx-border-color: #FF0000;
+    -fx-border-width: 2;
 }
 
 .hundido {
-    -fx-background-color: red;
+    -fx-background-color: rgba(139, 0, 0, 0.8) !important; /* Rojo Oscuro */
+    -fx-border-color: #660000;
+    -fx-border-width: 2;
+}
+
+/* 4. BARCOS EN PANEL LATERAL */
+.barco {
+    -fx-background-color: #8B4513; /* Marrón */
+    -fx-border-color: #654321;
+    -fx-border-width: 2;
+    -fx-border-radius: 3;
+    -fx-cursor: hand;
+}
+
+.barco:hover {
+    -fx-background-color: #A0522D; /* Marrón más claro */
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* 5. BOTONES */
+.button {
+    -fx-font-family: "Arial";
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-cursor: hand;
+    -fx-padding: 10 20;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0.3, 2, 2);
+}
+
+.button:hover {
+    -fx-scale-x: 1.08;
+    -fx-scale-y: 1.08;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0.5, 0, 0);
+}
+
+/* Botón INICIAR (verde) */
+#btnIniciar {
+    -fx-background-color: linear-gradient(to bottom, #2ecc71, #27ae60);
+    -fx-border-color: #229954;
+    -fx-border-width: 2;
+}
+
+#btnIniciar:hover {
+    -fx-background-color: linear-gradient(to bottom, #27ae60, #219653);
+}
+
+/* Botón VER OPONENTE (azul) */
+#btnVerOponente {
+    -fx-background-color: linear-gradient(to bottom, #3498db, #2980b9);
+    -fx-border-color: #2471a3;
+    -fx-border-width: 2;
+}
+
+#btnVerOponente:hover {
+    -fx-background-color: linear-gradient(to bottom, #2980b9, #1f618d);
+}
+
+/* Botón REINICIAR (rojo) */
+#btnReiniciar {
+    -fx-background-color: linear-gradient(to bottom, #e74c3c, #c0392b);
+    -fx-border-color: #a93226;
+    -fx-border-width: 2;
+}
+
+#btnReiniciar:hover {
+    -fx-background-color: linear-gradient(to bottom, #c0392b, #922b21);
+}
+
+/* 6. ETIQUETAS */
+.label {
+    -fx-font-family: "Arial";
+    -fx-text-fill: #2c3e50; /* Azul oscuro */
+}
+
+/* 7. CONTENEDORES */
+.vbox, .hbox {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+}
+
+/* 8. PANEL DE BARCOS */
+#panelBarcos {
+    -fx-background-color: rgba(248, 249, 250, 0.9);
+    -fx-border-color: #ccc;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-padding: 15;
 }

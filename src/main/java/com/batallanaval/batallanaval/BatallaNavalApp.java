@@ -10,22 +10,18 @@ import java.util.Objects;
 public class BatallaNavalApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-
+        // Cargar JuegoView.fxml (el juego completo)
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/com/batallanaval/batallanaval/view/ViewJugador.fxml")
+                getClass().getResource("/com/batallanaval/batallanaval/view/JuegoView1.fxml")
         );
 
         Scene scene = new Scene(loader.load());
-        stage.setTitle("Batalla Naval");
+        stage.setTitle("Batalla Naval - Juego Completo");
         stage.setScene(scene);
         stage.getIcons().add(new javafx.scene.image.Image(
                 Objects.requireNonNull(getClass().getResource("/com/batallanaval/batallanaval/view/buque-de-guerra.png")).toExternalForm()));
         stage.show();
+
+        System.out.println("✅ Aplicación iniciada con JuegoView1.fxml");
     }
 }
-
-// ACCEDER A LA INTERFAZ DE LAURA
-      /* FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/com/batallanaval/batallanaval/view/JuegoView1.fxml")
-        );
-    */
