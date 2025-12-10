@@ -7,7 +7,7 @@ import com.batallanaval.batallanaval.utils.ArchivoManager;
  * Observador que guarda automáticamente el estado del juego.
  * Implementa HU-5: Guardado automático del juego.
  *
- * @author [Tu Nombre]
+ * @author
  * @version 1.0
  */
 public class ObservadorGuardado implements ObservadorJuego {

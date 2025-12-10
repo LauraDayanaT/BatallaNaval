@@ -98,6 +98,11 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0.5, 0, 0);
 }
 
+.button:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
 /* Botón INICIAR (verde) */
 #btnIniciar {
     -fx-background-color: linear-gradient(to bottom, #2ecc71, #27ae60);
@@ -118,6 +123,22 @@
 
 #btnVerOponente:hover {
     -fx-background-color: linear-gradient(to bottom, #2980b9, #1f618d);
+}
+
+/* ========== BOTÓN HISTORIAL (MORADO) ========== */
+#btnHistorial {
+    -fx-background-color: linear-gradient(to bottom, #9b59b6, #8e44ad);
+    -fx-border-color: #7d3c98;
+    -fx-border-width: 2;
+}
+
+#btnHistorial:hover {
+    -fx-background-color: linear-gradient(to bottom, #8e44ad, #732d91);
+    -fx-effect: dropshadow(gaussian, rgba(155, 89, 182, 0.5), 10, 0.5, 0, 0);
+}
+
+#btnHistorial:pressed {
+    -fx-background-color: linear-gradient(to bottom, #732d91, #5e2a7a);
 }
 
 /* Botón REINICIAR (rojo) */
