@@ -129,7 +129,6 @@ public class Tablero implements Serializable {
 
         /**
          * Recibe un disparo en esta celda.
-         *
          * @return Resultado del disparo: "AGUA", "TOCADO", "HUNDIDO", o "REPETIDO"
          */
         public String recibirDisparo() {
@@ -155,7 +154,7 @@ public class Tablero implements Serializable {
                 }
             }
 
-            return "ERROR"; // No debería llegar aquí
+            return "REPETIDO"; // No debería llegar aquí
         }
 
         @Override

@@ -216,7 +216,6 @@ public class Jugador implements Serializable {
     /**
      * Realiza un disparo aleatorio (para la máquina).
      * HU-4: Inteligencia artificial de la máquina.
-     *
      * @param oponente Jugador oponente
      * @return Array con [fila, columna, resultado]
      */

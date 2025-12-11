@@ -103,7 +103,7 @@ public class ArchivoManager {
                     new FileInputStream(rutaArchivo.toFile()))) {
                 EstadoJuego estado = (EstadoJuego) ois.readObject();
 
-                System.out.println("✅ Juego cargado: " + estado.getFechaGuardado());
+                System.out.println("✅ Juego cargado: " + estado.fechaGuardado());
                 return estado;
             }
 
@@ -120,7 +120,7 @@ public class ArchivoManager {
      * Guarda las estadísticas del jugador (archivo plano - HU-5).
      *
      * @param jugador Jugador cuyas estadísticas guardar
-     * @throws JuegoGuardadoException si hay error
+     * @throws JuegoGuardadoException sí hay error
      */
     public void guardarEstadisticas(Jugador jugador) throws JuegoGuardadoException {
         try {
@@ -157,7 +157,7 @@ public class ArchivoManager {
      * Carga las estadísticas desde archivo plano.
      *
      * @return Lista de líneas de estadísticas
-     * @throws JuegoGuardadoException si hay error
+     * @throws JuegoGuardadoException sí hay error
      */
     public String cargarEstadisticas() throws JuegoGuardadoException {
         try {
@@ -182,7 +182,7 @@ public class ArchivoManager {
      * Guarda configuración del juego (archivo properties).
      *
      * @param propiedades Propiedades a guardar
-     * @throws JuegoGuardadoException si hay error
+     * @throws JuegoGuardadoException sí hay error
      */
     public void guardarConfiguracion(Properties propiedades) throws JuegoGuardadoException {
         try {
@@ -208,7 +208,7 @@ public class ArchivoManager {
      * Carga configuración del juego.
      *
      * @return Propiedades cargadas
-     * @throws JuegoGuardadoException si hay error
+     * @throws JuegoGuardadoException sí hay error
      */
     public Properties cargarConfiguracion() throws JuegoGuardadoException {
         try {
@@ -310,43 +310,21 @@ public class ArchivoManager {
     // ========== CLASE INTERNA PARA ESTADO DEL JUEGO ==========
 
     /**
-     * Clase interna que representa el estado completo del juego.
-     * Serializable para poder guardar/cargar.
-     */
-    public static class EstadoJuego implements Serializable {
-        private static final long serialVersionUID = 1L;
-
-        private final Jugador jugadorHumano;
-        private final Jugador jugadorMaquina;
-        private final boolean juegoIniciado;
-        private final boolean turnoJugador;
-        private final LocalDateTime fechaGuardado;
-
-        public EstadoJuego(Jugador jugadorHumano, Jugador jugadorMaquina,
-                           boolean juegoIniciado, boolean turnoJugador,
-                           LocalDateTime fechaGuardado) {
-            this.jugadorHumano = jugadorHumano;
-            this.jugadorMaquina = jugadorMaquina;
-            this.juegoIniciado = juegoIniciado;
-            this.turnoJugador = turnoJugador;
-            this.fechaGuardado = fechaGuardado;
-        }
-
-        // Getters
-        public Jugador getJugadorHumano() { return jugadorHumano; }
-        public Jugador getJugadorMaquina() { return jugadorMaquina; }
-        public boolean isJuegoIniciado() { return juegoIniciado; }
-        public boolean isTurnoJugador() { return turnoJugador; }
-        public LocalDateTime getFechaGuardado() { return fechaGuardado; }
+         * Clase interna que representa el estado completo del juego.
+         * Serializable para poder guardar/cargar.
+         */
+        public record EstadoJuego(Jugador jugadorHumano, Jugador jugadorMaquina, boolean juegoIniciado,
+                                  boolean turnoJugador, LocalDateTime fechaGuardado) implements Serializable {
+            private static final long serialVersionUID = 1L;
 
         @Override
-        public String toString() {
-            return String.format(
-                    "EstadoJuego{fecha=%s, iniciado=%s, turno=%s}",
-                    fechaGuardado.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
-                    juegoIniciado ? "Sí" : "No",
-                    turnoJugador ? "Jugador" : "Máquina"
-            );
+            public String toString() {
+                return String.format(
+                        "EstadoJuego{fecha=%s, iniciado=%s, turno=%s}",
+                        fechaGuardado.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+                        juegoIniciado ? "Sí" : "No",
+                        turnoJugador ? "Jugador" : "Máquina"
+                );
+            }
         }
-    }
 }

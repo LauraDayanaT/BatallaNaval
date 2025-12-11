@@ -534,9 +534,9 @@ public class JuegoController {
 
         // Actualizar interfaz con FIGURA 2D según resultado
         actualizarCeldaConFigura(celda, resultado, fila, col);
-
         celda.setDisable(true);
     }
+
 
     /**
      * Actualiza una celda con figura 2D según el resultado del disparo.
@@ -674,12 +674,7 @@ public class JuegoController {
      * Encuentra una celda en el tablero del jugador por coordenadas.
      */
     private Pane encontrarCeldaTableroJugador(int fila, int columna) {
-        for (javafx.scene.Node node : tableroJugador.getChildren()) {
-            if (GridPane.getRowIndex(node) == fila && GridPane.getColumnIndex(node) == columna) {
-                return (Pane) node;
-            }
-        }
-        return null;
+        return obtenerCelda(tableroJugador, fila, columna);
     }
 
     // ========== VERIFICACIÓN DE FIN DE JUEGO ==========

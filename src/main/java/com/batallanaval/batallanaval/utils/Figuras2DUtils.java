@@ -158,10 +158,6 @@ public class Figuras2DUtils {
         Color colorPrincipal, colorSecundario;
 
         switch (tipoBarco.toUpperCase()) {
-            case "PORTAVIONES":
-                colorPrincipal = COLOR_PORTAVIONES;
-                colorSecundario = COLOR_PORTAVIONES_CLARO;
-                break;
             case "DESTRUCTOR":
                 colorPrincipal = COLOR_DESTRUCTOR;
                 colorSecundario = COLOR_DESTRUCTOR_CLARO;
@@ -556,8 +552,6 @@ public class Figuras2DUtils {
      */
     public static Group crearFiguraResultado(String resultado, double tamaño) {
         switch (resultado.toUpperCase()) {
-            case "AGUA":
-                return crearCirculoAgua(tamaño);
             case "TOCADO":
                 return crearCirculoTocado(tamaño);
             case "HUNDIDO":
@@ -573,35 +567,11 @@ public class Figuras2DUtils {
      * Obtiene el color principal de un tipo de barco.
      */
     public static Color getColorPorTipoBarco(String tipoBarco) {
-        switch (tipoBarco.toUpperCase()) {
-            case "PORTAVIONES":
-                return COLOR_PORTAVIONES;
-            case "DESTRUCTOR":
-                return COLOR_DESTRUCTOR;
-            case "FRAGATA":
-                return COLOR_FRAGATA;
-            case "SUBMARINO":
-                return COLOR_SUBMARINO;
-            default:
-                return COLOR_PORTAVIONES;
-        }
-    }
-
-    /**
-     * Obtiene el color claro de un tipo de barco.
-     */
-    public static Color getColorClaroPorTipoBarco(String tipoBarco) {
-        switch (tipoBarco.toUpperCase()) {
-            case "PORTAVIONES":
-                return COLOR_PORTAVIONES_CLARO;
-            case "DESTRUCTOR":
-                return COLOR_DESTRUCTOR_CLARO;
-            case "FRAGATA":
-                return COLOR_FRAGATA_CLARO;
-            case "SUBMARINO":
-                return COLOR_SUBMARINO_CLARO;
-            default:
-                return COLOR_PORTAVIONES_CLARO;
-        }
+        return switch (tipoBarco.toUpperCase()) {
+            case "DESTRUCTOR" -> COLOR_DESTRUCTOR;
+            case "FRAGATA" -> COLOR_FRAGATA;
+            case "SUBMARINO" -> COLOR_SUBMARINO;
+            default -> COLOR_PORTAVIONES;
+        };
     }
 }
