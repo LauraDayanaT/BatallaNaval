@@ -14,11 +14,9 @@ public class JuegoGuardadoException extends Exception {
     private final String operacion; // "GUARDAR" o "CARGAR"
 
     /**
-     * Constructor con detalles de la operación fallida.
-     *
+     * Constructor con detalles de la operación fallida
      * @param mensaje Mensaje de error
      * @param archivo Nombre del archivo involucrado
-     * @param operación Operación que falló ("GUARDAR" o "CARGAR")
      */
     public JuegoGuardadoException(String mensaje, String archivo, String operacion) {
         super(mensaje);

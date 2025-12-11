@@ -1,8 +1,7 @@
 package com.batallanaval.batallanaval.utils;
 
 import com.batallanaval.batallanaval.exceptions.JuegoGuardadoException;
-import com.batallanaval.model.Jugador;
-import com.batallanaval.model.Tablero;
+import com.batallanaval.batallanaval.model.Jugador;
 
 import java.io.*;
 import java.nio.file.Files;

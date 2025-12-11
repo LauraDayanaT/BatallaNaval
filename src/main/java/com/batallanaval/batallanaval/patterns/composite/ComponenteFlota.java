@@ -1,6 +1,6 @@
 package com.batallanaval.batallanaval.patterns.composite;
 
-import com.batallanaval.model.Barco;
+import com.batallanaval.batallanaval.model.Barco;
 
 /**
  * Patrón de diseño ESTRUCTURAL: Composite

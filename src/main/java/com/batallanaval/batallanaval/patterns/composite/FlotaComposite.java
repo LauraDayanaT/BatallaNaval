@@ -1,6 +1,6 @@
 package com.batallanaval.batallanaval.patterns.composite;
 
-import com.batallanaval.model.Barco;
+import com.batallanaval.batallanaval.model.Barco;
 import java.util.ArrayList;
 import java.util.List;
 

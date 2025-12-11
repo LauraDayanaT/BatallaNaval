@@ -1,7 +1,7 @@
 package com.batallanaval.batallanaval.patterns.factory;
 
-import com.batallanaval.model.Barco;
-import com.batallanaval.model.TipoBarco;
+import com.batallanaval.batallanaval.model.Barco;
+import com.batallanaval.batallanaval.model.TipoBarco;
 
 /**
  * Patrón de diseño CREACIONAL: Factory Method

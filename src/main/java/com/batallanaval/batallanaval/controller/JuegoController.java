@@ -4,12 +4,16 @@ import com.batallanaval.batallanaval.patterns.observer.JuegoObservable;
 import com.batallanaval.batallanaval.patterns.observer.ObservadorConsola;
 import com.batallanaval.batallanaval.patterns.observer.ObservadorGuardado;
 import com.batallanaval.batallanaval.patterns.observer.ObservadorInterfaz;
-import com.batallanaval.model.Jugador;
-import com.batallanaval.model.Barco;
-import com.batallanaval.model.TipoBarco;
+import com.batallanaval.batallanaval.model.Jugador;
+import com.batallanaval.batallanaval.model.Barco;
+import com.batallanaval.batallanaval.model.TipoBarco;
 import com.batallanaval.batallanaval.patterns.factory.BarcoFactory;
 import com.batallanaval.batallanaval.exceptions.PosicionInvalidaException;
 import com.batallanaval.batallanaval.exceptions.BarcoFueraLimitesException;
+import com.batallanaval.batallanaval.datastructures.PilaMovimientos;
+import com.batallanaval.batallanaval.model.Movimiento;
+import com.batallanaval.batallanaval.model.Movimiento.TipoResultado;
+import com.batallanaval.batallanaval.utils.Figuras2DUtils;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
@@ -19,11 +23,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.shape.*;
 import javafx.scene.Group;
-
-import com.batallanaval.batallanaval.datastructures.PilaMovimientos;
-import com.batallanaval.model.Movimiento;
-import com.batallanaval.model.Movimiento.TipoResultado;
-import com.batallanaval.batallanaval.utils.Figuras2DUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -41,17 +40,13 @@ import java.util.HashMap;
  */
 public class JuegoController {
 
-    @FXML
-    private GridPane tableroJugador;      // Tablero de posición del jugador humano
-
-    @FXML
-    private VBox panelBarcos;             // Panel lateral para seleccionar barcos
-
-    @FXML
-    private GridPane tableroOponente;     // Tablero principal para disparar al oponente
+    @FXML private GridPane tableroJugador;      // Tablero de posición del jugador humano
+    @FXML private VBox panelBarcos;             // Panel lateral para seleccionar barcos
+    @FXML private GridPane tableroOponente;     // Tablero principal para disparar al oponente
 
     private Jugador jugador;              // Jugador humano
     private Jugador maquina;              // Jugador máquina
+
     private boolean juegoIniciado = false;
     private boolean turnoJugador = true;  // true = turno jugador, false = turno máquina
 

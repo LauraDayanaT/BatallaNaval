@@ -1,4 +1,4 @@
-package com.batallanaval.model;
+package com.batallanaval.batallanaval.model;
 
 import com.batallanaval.batallanaval.patterns.composite.FlotaComposite;
 import com.batallanaval.batallanaval.patterns.factory.BarcoFactory;

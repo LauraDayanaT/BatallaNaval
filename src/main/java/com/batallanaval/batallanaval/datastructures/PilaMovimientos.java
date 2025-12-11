@@ -180,7 +180,7 @@ public class PilaMovimientos<T> implements Serializable {
      * Obtiene los últimos N movimientos.
      *
      * @param n Cantidad de movimientos a obtener
-     * @return Lista con los últimos n movimientos (del más reciente al más antiguo)
+     * @return Lista con los últimos movimientos (del más reciente al más antiguo)
      * @throws IllegalArgumentException si n es negativo
      */
     public List<T> ultimosMovimientos(int n) {

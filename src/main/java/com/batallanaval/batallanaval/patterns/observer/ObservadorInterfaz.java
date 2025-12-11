@@ -1,6 +1,6 @@
 package com.batallanaval.batallanaval.patterns.observer;
 
-import com.batallanaval.model.Jugador;
+import com.batallanaval.batallanaval.model.Jugador;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;

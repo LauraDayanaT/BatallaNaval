@@ -1,6 +1,6 @@
 package com.batallanaval.batallanaval.patterns.observer;
 
-import com.batallanaval.model.Jugador;
+import com.batallanaval.batallanaval.model.Jugador;
 import java.util.ArrayList;
 import java.util.List;
 

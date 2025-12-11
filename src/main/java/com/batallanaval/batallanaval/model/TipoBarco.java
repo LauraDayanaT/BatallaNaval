@@ -1,4 +1,4 @@
-package com.batallanaval.model;
+package com.batallanaval.batallanaval.model;
 
 public enum TipoBarco {
     PORTAVIONES(4, "Portaaviones", "🛳️"),
