@@ -4,7 +4,8 @@ import com.batallanaval.batallanaval.patterns.observer.JuegoObservable;
 import com.batallanaval.batallanaval.patterns.observer.ObservadorConsola;
 import com.batallanaval.batallanaval.patterns.observer.ObservadorGuardado;
 import com.batallanaval.batallanaval.patterns.observer.ObservadorInterfaz;
-import com.batallanaval.model.*;
+import com.batallanaval.model.Jugador;
+import com.batallanaval.model.Barco;
 import com.batallanaval.model.TipoBarco;
 import com.batallanaval.batallanaval.patterns.factory.BarcoFactory;
 import com.batallanaval.batallanaval.exceptions.PosicionInvalidaException;
@@ -394,14 +395,7 @@ public class JuegoController {
      * Encuentra el índice de un barco en la flota del jugador.
      */
     private int encontrarIndiceBarco(Barco barcoBuscado) {
-        int indice = 0;
-        for (Barco barco : jugador.getBarcos()) {
-            if (!barco.estaColocado() && barco.getTipo() == barcoBuscado.getTipo()) {
-                return indice;
-            }
-            indice++;
-        }
-        return -1;
+     return jugador.getBarcos().indexOf(barcoBuscado);
     }
 
     /**
