@@ -12,7 +12,7 @@ import javafx.scene.Group;
  * Cumple con el requisito de implementar figuras 2D para el juego.
  *
  * @author [Tu Nombre o nombres del grupo]
- * @version 1.1
+ * @version 1.2
  */
 public class Figuras2DUtils {
 
@@ -21,10 +21,21 @@ public class Figuras2DUtils {
     public static final Color COLOR_AGUA = Color.rgb(30, 144, 255, 0.8);    // Azul Dodger
     public static final Color COLOR_TOCADO = Color.rgb(255, 69, 0, 0.8);    // Rojo Naranja
     public static final Color COLOR_HUNDIDO = Color.rgb(139, 0, 0, 0.8);    // Rojo Oscuro
-    public static final Color COLOR_BARCO = Color.rgb(139, 69, 19);         // Marrón SaddleBrown
-    public static final Color COLOR_BARCO_CLARO = Color.rgb(160, 82, 45);   // Marrón Sienna
-    public static final Color COLOR_TABLERO = Color.rgb(135, 206, 235, 0.7);// Celeste
-    public static final Color COLOR_BORDE = Color.rgb(70, 130, 180);        // Azul Acero
+
+    // Colores para diferentes tipos de barcos
+    public static final Color COLOR_PORTAVIONES = Color.rgb(255, 140, 0);         // Naranja Oscuro
+    public static final Color COLOR_DESTRUCTOR = Color.rgb(34, 139, 34);          // Verde Bosque
+    public static final Color COLOR_FRAGATA = Color.rgb(0, 0, 139);               // Azul Oscuro
+    public static final Color COLOR_SUBMARINO = Color.rgb(128, 128, 128);         // Gris
+
+    // Colores claros para variantes
+    public static final Color COLOR_PORTAVIONES_CLARO = Color.rgb(255, 165, 0);   // Naranja
+    public static final Color COLOR_DESTRUCTOR_CLARO = Color.rgb(50, 205, 50);    // Verde Lima
+    public static final Color COLOR_FRAGATA_CLARO = Color.rgb(30, 144, 255);      // Azul Dodger
+    public static final Color COLOR_SUBMARINO_CLARO = Color.rgb(169, 169, 169);   // Gris Claro
+
+    public static final Color COLOR_TABLERO = Color.rgb(135, 206, 235, 0.7);      // Celeste
+    public static final Color COLOR_BORDE = Color.rgb(70, 130, 180);              // Azul Acero
 
     // ========== EFECTOS ==========
 
@@ -137,18 +148,44 @@ public class Figuras2DUtils {
      * @param ancho Ancho del barco
      * @param alto Alto del barco
      * @param horizontal true si es horizontal, false si vertical
+     * @param tipoBarco Tipo de barco (PORTAAVIONES, DESTRUCTOR, FRAGATA, SUBMARINO)
      * @return Rectangle configurado
      */
-    public static Group crearBarcoFigura(double ancho, double alto, boolean horizontal) {
+    public static Group crearBarcoFigura(double ancho, double alto, boolean horizontal, String tipoBarco) {
         Rectangle barco = new Rectangle(ancho, alto);
 
-        // Gradiente para efecto 3D
+        // Seleccionar color según el tipo de barco
+        Color colorPrincipal, colorSecundario;
+
+        switch (tipoBarco.toUpperCase()) {
+            case "PORTAVIONES":
+                colorPrincipal = COLOR_PORTAVIONES;
+                colorSecundario = COLOR_PORTAVIONES_CLARO;
+                break;
+            case "DESTRUCTOR":
+                colorPrincipal = COLOR_DESTRUCTOR;
+                colorSecundario = COLOR_DESTRUCTOR_CLARO;
+                break;
+            case "FRAGATA":
+                colorPrincipal = COLOR_FRAGATA;
+                colorSecundario = COLOR_FRAGATA_CLARO;
+                break;
+            case "SUBMARINO":
+                colorPrincipal = COLOR_SUBMARINO;
+                colorSecundario = COLOR_SUBMARINO_CLARO;
+                break;
+            default:
+                colorPrincipal = COLOR_PORTAVIONES;
+                colorSecundario = COLOR_PORTAVIONES_CLARO;
+        }
+
+        // Usar colores según orientación
         if (horizontal) {
-            barco.setFill(Color.rgb(139, 69, 19)); // Marrón más oscuro
-            barco.setStroke(Color.rgb(101, 67, 33)); // Borde más oscuro
+            barco.setFill(colorPrincipal);
+            barco.setStroke(colorPrincipal.darker());
         } else {
-            barco.setFill(Color.rgb(160, 82, 45)); // Marrón más claro
-            barco.setStroke(Color.rgb(139, 69, 19)); // Borde
+            barco.setFill(colorSecundario);
+            barco.setStroke(colorSecundario.darker());
         }
 
         barco.setStrokeWidth(2);
@@ -156,20 +193,67 @@ public class Figuras2DUtils {
         barco.setArcHeight(10); // Esquinas redondeadas
         barco.setEffect(crearSombraExterna());
 
-        // Agregar detalles (ventanas o cañones)
+        // Agregar detalles según el tipo de barco
         Group grupo = new Group(barco);
 
-        if (ancho > 40) { // Solo para barcos grandes
-            Circle detalle = new Circle(ancho * 0.1);
-            detalle.setFill(Color.rgb(255, 255, 255, 0.5));
-            detalle.setCenterX(ancho * 0.5);
-            detalle.setCenterY(alto * 0.5);
-            detalle.setStroke(Color.rgb(200, 200, 200));
-            detalle.setStrokeWidth(1);
-            grupo.getChildren().add(detalle);
-        }
+        // Detalles específicos para cada tipo
+        agregarDetallesBarco(grupo, ancho, alto, tipoBarco);
 
         return grupo;
+    }
+
+    /**
+     * Agrega detalles específicos según el tipo de barco.
+     */
+    private static void agregarDetallesBarco(Group grupo, double ancho, double alto, String tipoBarco) {
+        switch (tipoBarco.toUpperCase()) {
+            case "PORTAVIONES":
+                // Ventanas grandes para portaaviones
+                for (int i = 0; i < 3; i++) {
+                    Rectangle ventana = new Rectangle(ancho * 0.08, alto * 0.4);
+                    ventana.setFill(Color.rgb(255, 255, 255, 0.6));
+                    ventana.setStroke(Color.rgb(200, 200, 200, 0.8));
+                    ventana.setStrokeWidth(1);
+                    ventana.setX(ancho * (0.2 + i * 0.3));
+                    ventana.setY(alto * 0.3);
+                    grupo.getChildren().add(ventana);
+                }
+                break;
+
+            case "DESTRUCTOR":
+                // Cañones para destructor
+                for (int i = 0; i < 2; i++) {
+                    Circle canon = new Circle(ancho * 0.04);
+                    canon.setFill(Color.rgb(50, 50, 50));
+                    canon.setStroke(Color.rgb(30, 30, 30));
+                    canon.setCenterX(ancho * (0.3 + i * 0.4));
+                    canon.setCenterY(alto * 0.3);
+                    grupo.getChildren().add(canon);
+                }
+                break;
+
+            case "FRAGATA":
+                // Ventanas pequeñas para fragata
+                for (int i = 0; i < 4; i++) {
+                    Circle ventana = new Circle(ancho * 0.03);
+                    ventana.setFill(Color.rgb(173, 216, 230, 0.7)); // Azul claro
+                    ventana.setStroke(Color.rgb(135, 206, 235));
+                    ventana.setCenterX(ancho * (0.15 + i * 0.23));
+                    ventana.setCenterY(alto * 0.5);
+                    grupo.getChildren().add(ventana);
+                }
+                break;
+
+            case "SUBMARINO":
+                // Ventana de observación para submarino
+                Circle ventana = new Circle(ancho * 0.1);
+                ventana.setFill(Color.rgb(0, 0, 139, 0.5)); // Azul oscuro semitransparente
+                ventana.setStroke(Color.rgb(0, 0, 100));
+                ventana.setCenterX(ancho * 0.5);
+                ventana.setCenterY(alto * 0.5);
+                grupo.getChildren().add(ventana);
+                break;
+        }
     }
 
     /**
@@ -178,8 +262,8 @@ public class Figuras2DUtils {
     public static Group crearPortaaviones(double ancho, double alto) {
         // Cuerpo principal
         Rectangle cuerpo = new Rectangle(ancho * 0.8, alto);
-        cuerpo.setFill(COLOR_BARCO);
-        cuerpo.setStroke(COLOR_BARCO.darker());
+        cuerpo.setFill(COLOR_PORTAVIONES); // Naranja Oscuro
+        cuerpo.setStroke(COLOR_PORTAVIONES.darker());
         cuerpo.setStrokeWidth(2);
         cuerpo.setArcWidth(15);
         cuerpo.setArcHeight(15);
@@ -187,8 +271,8 @@ public class Figuras2DUtils {
 
         // Cubierta (parte superior)
         Rectangle cubierta = new Rectangle(ancho * 0.9, alto * 0.3);
-        cubierta.setFill(Color.rgb(169, 169, 169)); // Gris
-        cubierta.setStroke(Color.rgb(128, 128, 128));
+        cubierta.setFill(COLOR_PORTAVIONES_CLARO); // Naranja
+        cubierta.setStroke(COLOR_PORTAVIONES_CLARO.darker());
         cubierta.setStrokeWidth(1);
         cubierta.setX(ancho * 0.05);
         cubierta.setY(alto * 0.1);
@@ -203,8 +287,16 @@ public class Figuras2DUtils {
         torre.setCenterX(ancho * 0.5);
         torre.setCenterY(alto * 0.3);
 
+        // Pista de aterrizaje (líneas)
+        Line pista1 = new Line(ancho * 0.1, alto * 0.2, ancho * 0.9, alto * 0.2);
+        Line pista2 = new Line(ancho * 0.1, alto * 0.25, ancho * 0.9, alto * 0.25);
+        pista1.setStroke(Color.WHITE);
+        pista1.setStrokeWidth(1);
+        pista2.setStroke(Color.WHITE);
+        pista2.setStrokeWidth(1);
+
         // Grupo todas las partes
-        Group portaaviones = new Group(cuerpo, cubierta, torre);
+        Group portaaviones = new Group(cuerpo, cubierta, torre, pista1, pista2);
         portaaviones.setEffect(crearSombraExterna());
 
         return portaaviones;
@@ -216,21 +308,28 @@ public class Figuras2DUtils {
     public static Group crearSubmarino(double ancho, double alto) {
         // Forma ovalada (elipse)
         Ellipse submarino = new Ellipse(ancho * 0.4, alto * 0.4);
-        submarino.setFill(Color.rgb(128, 128, 128)); // Gris
-        submarino.setStroke(Color.rgb(105, 105, 105));
+        submarino.setFill(COLOR_SUBMARINO); // Gris
+        submarino.setStroke(COLOR_SUBMARINO.darker());
         submarino.setStrokeWidth(2);
         submarino.setCenterX(ancho * 0.5);
         submarino.setCenterY(alto * 0.5);
 
         // Torre del submarino
         Rectangle torre = new Rectangle(ancho * 0.15, alto * 0.6);
-        torre.setFill(Color.rgb(105, 105, 105));
-        torre.setStroke(Color.rgb(64, 64, 64));
+        torre.setFill(COLOR_SUBMARINO_CLARO); // Gris Claro
+        torre.setStroke(COLOR_SUBMARINO_CLARO.darker());
         torre.setStrokeWidth(1);
         torre.setX(ancho * 0.425);
         torre.setY(alto * 0.2);
         torre.setArcWidth(5);
         torre.setArcHeight(5);
+
+        // Ventana de observación
+        Circle ventana = new Circle(ancho * 0.08);
+        ventana.setFill(Color.rgb(0, 0, 139, 0.5)); // Azul oscuro semitransparente
+        ventana.setStroke(Color.rgb(0, 0, 100));
+        ventana.setCenterX(ancho * 0.5);
+        ventana.setCenterY(alto * 0.5);
 
         // Periscopio (línea)
         Line periscopio = new Line();
@@ -241,7 +340,93 @@ public class Figuras2DUtils {
         periscopio.setStroke(Color.BLACK);
         periscopio.setStrokeWidth(1.5);
 
-        Group grupo = new Group(submarino, torre, periscopio);
+        Group grupo = new Group(submarino, torre, ventana, periscopio);
+        grupo.setEffect(crearSombraExterna());
+
+        return grupo;
+    }
+
+    /**
+     * Crea un destructor con detalles especiales.
+     */
+    public static Group crearDestructor(double ancho, double alto) {
+        Group grupo = new Group();
+
+        // Cuerpo principal
+        Rectangle cuerpo = new Rectangle(ancho * 0.9, alto);
+        cuerpo.setFill(COLOR_DESTRUCTOR); // Verde Bosque
+        cuerpo.setStroke(COLOR_DESTRUCTOR.darker());
+        cuerpo.setStrokeWidth(2);
+        cuerpo.setArcWidth(12);
+        cuerpo.setArcHeight(12);
+        cuerpo.setX(ancho * 0.05);
+        grupo.getChildren().add(cuerpo);
+
+        // Superestructura
+        Rectangle superestructura = new Rectangle(ancho * 0.5, alto * 0.7);
+        superestructura.setFill(COLOR_DESTRUCTOR_CLARO); // Verde Lima
+        superestructura.setStroke(COLOR_DESTRUCTOR_CLARO.darker());
+        superestructura.setStrokeWidth(1);
+        superestructura.setX(ancho * 0.25);
+        superestructura.setY(alto * 0.15);
+        superestructura.setArcWidth(8);
+        superestructura.setArcHeight(8);
+        grupo.getChildren().add(superestructura);
+
+        // Cañones
+        for (int i = 0; i < 2; i++) {
+            Rectangle canon = new Rectangle(ancho * 0.08, alto * 0.4);
+            canon.setFill(Color.rgb(50, 50, 50));
+            canon.setStroke(Color.rgb(30, 30, 30));
+            canon.setX(ancho * (0.15 + i * 0.7));
+            canon.setY(alto * 0.3);
+            canon.setArcWidth(3);
+            canon.setArcHeight(3);
+            grupo.getChildren().add(canon);
+        }
+
+        grupo.setEffect(crearSombraExterna());
+
+        return grupo;
+    }
+
+    /**
+     * Crea una fragata con detalles especiales.
+     */
+    public static Group crearFragata(double ancho, double alto) {
+        Group grupo = new Group();
+
+        // Cuerpo principal
+        Rectangle cuerpo = new Rectangle(ancho * 0.85, alto);
+        cuerpo.setFill(COLOR_FRAGATA); // Azul Oscuro
+        cuerpo.setStroke(COLOR_FRAGATA.darker());
+        cuerpo.setStrokeWidth(2);
+        cuerpo.setArcWidth(8);
+        cuerpo.setArcHeight(8);
+        cuerpo.setX(ancho * 0.075);
+        grupo.getChildren().add(cuerpo);
+
+        // Cubierta
+        Rectangle cubierta = new Rectangle(ancho * 0.7, alto * 0.6);
+        cubierta.setFill(COLOR_FRAGATA_CLARO); // Azul Dodger
+        cubierta.setStroke(COLOR_FRAGATA_CLARO.darker());
+        cubierta.setStrokeWidth(1);
+        cubierta.setX(ancho * 0.15);
+        cubierta.setY(alto * 0.2);
+        cubierta.setArcWidth(6);
+        cubierta.setArcHeight(6);
+        grupo.getChildren().add(cubierta);
+
+        // Ventanas
+        for (int i = 0; i < 3; i++) {
+            Circle ventana = new Circle(ancho * 0.03);
+            ventana.setFill(Color.rgb(173, 216, 230, 0.7)); // Azul claro
+            ventana.setStroke(Color.rgb(135, 206, 235));
+            ventana.setCenterX(ancho * (0.25 + i * 0.25));
+            ventana.setCenterY(alto * 0.5);
+            grupo.getChildren().add(ventana);
+        }
+
         grupo.setEffect(crearSombraExterna());
 
         return grupo;
@@ -354,12 +539,15 @@ public class Figuras2DUtils {
         switch (tipo.toUpperCase()) {
             case "PORTAVIONES":
                 return crearPortaaviones(ancho, alto);
+            case "DESTRUCTOR":
+                return crearDestructor(ancho, alto);
+            case "FRAGATA":
+                return crearFragata(ancho, alto);
             case "SUBMARINO":
                 return crearSubmarino(ancho, alto);
-            case "DESTRUCTOR":
-            case "FRAGATA":
             default:
-                return crearBarcoFigura(ancho, alto, horizontal);
+                // Usar el método genérico con el tipo específico
+                return crearBarcoFigura(ancho, alto, horizontal, tipo);
         }
     }
 
@@ -378,6 +566,42 @@ public class Figuras2DUtils {
                 return crearMarcaRepetido(tamaño);
             default:
                 return crearCirculoAgua(tamaño);
+        }
+    }
+
+    /**
+     * Obtiene el color principal de un tipo de barco.
+     */
+    public static Color getColorPorTipoBarco(String tipoBarco) {
+        switch (tipoBarco.toUpperCase()) {
+            case "PORTAVIONES":
+                return COLOR_PORTAVIONES;
+            case "DESTRUCTOR":
+                return COLOR_DESTRUCTOR;
+            case "FRAGATA":
+                return COLOR_FRAGATA;
+            case "SUBMARINO":
+                return COLOR_SUBMARINO;
+            default:
+                return COLOR_PORTAVIONES;
+        }
+    }
+
+    /**
+     * Obtiene el color claro de un tipo de barco.
+     */
+    public static Color getColorClaroPorTipoBarco(String tipoBarco) {
+        switch (tipoBarco.toUpperCase()) {
+            case "PORTAVIONES":
+                return COLOR_PORTAVIONES_CLARO;
+            case "DESTRUCTOR":
+                return COLOR_DESTRUCTOR_CLARO;
+            case "FRAGATA":
+                return COLOR_FRAGATA_CLARO;
+            case "SUBMARINO":
+                return COLOR_SUBMARINO_CLARO;
+            default:
+                return COLOR_PORTAVIONES_CLARO;
         }
     }
 }
