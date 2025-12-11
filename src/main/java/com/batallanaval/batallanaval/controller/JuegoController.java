@@ -354,7 +354,8 @@ public class JuegoController {
 
             if (colocado) {
                 // Colocación exitosa - usar FIGURA 2D
-                marcarCeldaComoBarcoFigura(celda, barco.getTamaño(), true, barco.getNombre());
+                marcarBarcoEnTablero(fila, col, barco.getTamaño(), true, barco.getNombre());
+
                 panelBarcos.getChildren().remove(barcoPane);
 
                 // NOTIFICAR OBSERVADORES
@@ -415,23 +416,40 @@ public class JuegoController {
     /**
      * Marca una celda como conteniendo un barco usando FIGURA 2D (NUEVA VERSIÓN).
      */
-    private void marcarCeldaComoBarcoFigura(Pane celda, int tamaño, boolean horizontal, String tipoBarco) {
-        // Limpiar la celda primero
-        celda.getChildren().clear();
+    private void marcarBarcoEnTablero(int fila, int col, int tamaño, boolean horizontal, String nombre) {
+        for (int i = 0; i < tamaño; i++) {
 
-        // Crear figura 2D para el barco - CAMBIADO a Group
-        Group figuraBarco = Figuras2DUtils.crearFiguraBarcoPorTipo(
-                tipoBarco,
-                25,  // Tamaño de celda
-                25,
-                horizontal
-        );
+            int f = horizontal ? fila : fila + i;
+            int c = horizontal ? col + i : col;
 
-        // Agregar figura a la celda
-        celda.getChildren().add(figuraBarco);
+            Pane celda = obtenerCelda(tableroJugador, f, c);
 
-        System.out.println("🎨 Celda marcada con figura 2D de barco: " + tipoBarco);
+            if (celda != null) {
+                celda.getChildren().clear();
+
+                Group parte = Figuras2DUtils.crearFiguraBarcoPorTipo(
+                        nombre,
+                        25,
+                        25,
+                        horizontal
+                );
+
+                celda.getChildren().add(parte);
+            }
+        }
     }
+    private Pane obtenerCelda(GridPane grid, int fila, int columna) {
+        for (javafx.scene.Node n : grid.getChildren()) {
+            Integer r = GridPane.getRowIndex(n);
+            Integer c = GridPane.getColumnIndex(n);
+            if (r != null && c != null && r == fila && c == columna) {
+                return (Pane) n;
+            }
+        }
+        return null;
+    }
+
+
 
     /**
      * Muestra error de colocación con figura 2D.
