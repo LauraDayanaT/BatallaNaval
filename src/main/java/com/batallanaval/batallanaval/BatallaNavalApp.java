@@ -16,7 +16,7 @@ public class BatallaNavalApp extends Application {
         );
 
         Scene scene = new Scene(loader.load());
-        stage.setTitle("Batalla Naval - Juego Completo");
+        stage.setTitle("Batalla Naval");
         stage.setScene(scene);
         stage.getIcons().add(new javafx.scene.image.Image(
                 Objects.requireNonNull(getClass().getResource("/com/batallanaval/batallanaval/view/buque-de-guerra.png")).toExternalForm()));

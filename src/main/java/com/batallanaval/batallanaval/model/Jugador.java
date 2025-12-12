@@ -25,6 +25,9 @@ public class Jugador implements Serializable {
     private final FlotaComposite flota;       // Flota usando patrón Composite
     private int barcosHundidosPropios;        // Contador de barcos propios hundidos
     private int barcosHundidosEnemigos;       // Contador de barcos enemigos hundidos
+    private List<int[]> impactosRecientes = new ArrayList<>(); // Registra coordenadas [fila, col] de un barco TOCADO
+    private List<int[]> posiblesObjetivos = new ArrayList<>(); // Celdas adyacentes pendientes de ataque (Modo Caza)
+
 
     /**
      * Constructor principal.
@@ -219,18 +222,94 @@ public class Jugador implements Serializable {
      * @param oponente Jugador oponente
      * @return Array con [fila, columna, resultado]
      */
-    public int[] realizarDisparoAleatorio(Jugador oponente) {
+    /**
+     * Realiza un disparo óptimo (para la máquina).
+     *
+     * Si está en modo 'Caza' (hay objetivos), ataca un objetivo adyacente.
+     * Si está en modo 'Búsqueda' (no hay objetivos), dispara aleatoriamente.
+     *
+     * @param oponente Jugador oponente
+     * @return Array con [fila, columna, resultado]
+     */
+    public int[] realizarDisparoOptimo(Jugador oponente) {
         int fila, columna;
         String resultado;
 
-        do {
-            fila = (int) (Math.random() * 10);
-            columna = (int) (Math.random() * 10);
-            resultado = realizarDisparo(fila, columna, oponente);
-        } while (resultado.equals("REPETIDO"));
+        // 1. ESTRATEGIA: MODO CAZA
+        if (!posiblesObjetivos.isEmpty()) {
+            // Toma y remueve el primer objetivo adyacente
+            int[] objetivo = posiblesObjetivos.remove(0);
+            fila = objetivo[0];
+            columna = objetivo[1];
+            System.out.println("🤖🎯 Modo Caza: Disparando en (" + fila + "," + columna + ")");
 
+        } else {
+            // 2. ESTRATEGIA: MODO BÚSQUEDA (Aleatorio/Random)
+            do {
+                fila = (int) (Math.random() * 10);
+                columna = (int) (Math.random() * 10);
+                // Si el disparo es repetido, el bucle lo manejará
+            } while (tableroDisparos.estaDisparada(fila, columna)); // Asegura que no sea REPETIDO antes de disparar
+            System.out.println("🤖🔍 Modo Búsqueda: Disparando en (" + fila + "," + columna + ")");
+        }
+
+        // 3. EJECUTAR DISPARO
+        resultado = realizarDisparo(fila, columna, oponente);
+
+        // 4. FEEDBACK DE LA IA (Aprender del disparo)
+        if (resultado.equals("TOCADO")) {
+            impactosRecientes.add(new int[]{fila, columna});
+            // Genera y agrega los 4 vecinos a la cola de objetivos
+            agregarAdyacentes(fila, columna);
+
+        } else if (resultado.equals("HUNDIDO")) {
+            // Cuando se hunde, limpia el estado para volver a BÚSQUEDA
+            impactosRecientes.clear();
+            posiblesObjetivos.clear();
+            System.out.println("🤖💥 Barco Hundido. Volviendo a modo Búsqueda.");
+
+        } else if (resultado.equals("AGUA") && !impactosRecientes.isEmpty()) {
+            // Si estaba en modo Caza (es decir, impactosRecientes no está vacío) y falla (AGUA),
+            // No hacemos nada más que eliminarlo de posiblesObjetivos (que ya se hizo arriba)
+            // y seguir con el siguiente objetivo en la lista.
+        }
+
+        // Mapea el resultado a tu formato [0, 1, 2] para el controlador
         return new int[]{fila, columna, resultado.equals("AGUA") ? 0 :
                 resultado.equals("TOCADO") ? 1 : 2};
+    }
+
+    /**
+     * Genera y agrega las coordenadas adyacentes válidas (no disparadas)
+     * al listado de posibles objetivos de caza.
+     */
+    private void agregarAdyacentes(int r, int c) {
+        int[][] direcciones = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}}; // Este, Oeste, Sur, Norte
+
+        for (int[] dir : direcciones) {
+            int nuevaFila = r + dir[0];
+            int nuevaCol = c + dir[1];
+
+            // 1. Verificar límites del tablero
+            if (nuevaFila >= 0 && nuevaFila < 10 && nuevaCol >= 0 && nuevaCol < 10) {
+
+                // 2. Verificar si ya se ha disparado en esa casilla
+                if (!tableroDisparos.estaDisparada(nuevaFila, nuevaCol)) {
+
+                    // 3. Verificar si no está ya en la cola de objetivos pendientes
+                    boolean existe = false;
+                    for(int[] obj : posiblesObjetivos) {
+                        if(obj[0] == nuevaFila && obj[1] == nuevaCol) {
+                            existe = true;
+                            break;
+                        }
+                    }
+                    if(!existe) {
+                        posiblesObjetivos.add(new int[]{nuevaFila, nuevaCol});
+                    }
+                }
+            }
+        }
     }
 
     // ========== VERIFICACIONES ==========
@@ -259,6 +338,7 @@ public class Jugador implements Serializable {
      *
      * @return true si todos los barcos están en el tablero
      */
+
     public boolean todosBarcosColocados() {
         for (Barco barco : flota.getBarcos()) {
             if (!barco.estaColocado()) {
@@ -335,5 +415,21 @@ public class Jugador implements Serializable {
     public String toString() {
         return String.format("Jugador{nombre='%s', barcosRestantes=%d, haPerdido=%s}",
                 nickname, getBarcosRestantes(), haPerdido());
+    }
+
+    public List<int[]> getImpactosRecientes() {
+        return impactosRecientes;
+    }
+
+    public void setImpactosRecientes(List<int[]> impactosRecientes) {
+        this.impactosRecientes = impactosRecientes;
+    }
+
+    public List<int[]> getPosiblesObjetivos() {
+        return posiblesObjetivos;
+    }
+
+    public void setPosiblesObjetivos(List<int[]> posiblesObjetivos) {
+        this.posiblesObjetivos = posiblesObjetivos;
     }
 }

@@ -8,69 +8,121 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="609.0" prefWidth="940.0" stylesheets="@estilos.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.batallanaval.batallanaval.controller.JuegoController">
+<AnchorPane fx:id="mainAnchorPane" prefHeight="680.0" prefWidth="940.0" stylesheets="@estilos.css"
+            xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.batallanaval.batallanaval.controller.JuegoController">
 
     <children>
-        <!-- ========== TÍTULO ========== -->
-        <Label layoutX="333.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="🎮 BATALLA NAVAL" />
 
-        <!-- ========== PANEL IZQUIERDO: TU FLOTA ========== -->
-        <Label layoutX="97.0" layoutY="40.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="TU FLOTA" />
+        <Label layoutX="333.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+               text="🎮 BATALLA NAVAL" />
 
-        <GridPane fx:id="tableroJugador" gridLinesVisible="true" layoutX="20.0" layoutY="70.0" prefHeight="300.0" prefWidth="300.0" />
-
-        <!-- ========== PANEL CENTRAL: BARCOS ========== -->
-        <Label layoutX="348.0" layoutY="40.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="BARCOS PARA COLOCAR" />
-
-        <VBox fx:id="panelBarcos" layoutX="350.0" layoutY="70.0" prefHeight="300.0" prefWidth="200.0" spacing="10.0" style="-fx-background-color: #f8f9fa; -fx-border-color: #ccc; -fx-border-width: 1; -fx-padding: 10;" />
-
-        <!-- ========== PANEL DERECHO: FLOTA ENEMIGA ========== -->
-        <Label layoutX="684.0" layoutY="40.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="FLOTA ENEMIGA" />
-
-        <GridPane fx:id="tableroOponente" gridLinesVisible="true" layoutX="600.0" layoutY="70.0" prefHeight="300.0" prefWidth="300.0" />
-
-        <!-- ========== BOTONES DE CONTROL ========== -->
-        <HBox layoutX="20.0" layoutY="400.0" spacing="15.0" />
-
-        <!-- ========== LEYENDA (SIMPLIFICADA) ========== -->
-        <VBox layoutX="229.0" layoutY="458.0" prefHeight="132.0" prefWidth="170.0" spacing="10.0">
-            <Label style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="LEYENDA:" />
-            <HBox spacing="10.0">
-                <Label style="-fx-font-size: 20px;" text="🔵" />
-                <Label text="Barco colocado" />
+        <Label layoutX="120.0" layoutY="40.0" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="TU FLOTA" />
+        <VBox layoutX="20.0" layoutY="70.0" spacing="0.0">
+            <HBox spacing="0.0">
+                <VBox prefWidth="25.0" prefHeight="25.0" spacing="0.0"/>
+                <HBox fx:id="coordColumnasJugador" alignment="CENTER" prefHeight="25.0" spacing="0.0"/>
             </HBox>
-            <HBox spacing="10.0">
-                <Label style="-fx-font-size: 20px;" text="🌊" />
-                <Label text="Agua (disparo fallado)" />
-            </HBox>
-            <HBox spacing="10.0">
-                <Label style="-fx-font-size: 20px;" text="🔥" />
-                <Label text="Tocado (barco dañado)" />
-            </HBox>
-            <HBox spacing="10.0">
-                <Label style="-fx-font-size: 20px;" text="💥" />
-                <Label text="Hundido (barco destruído)" />
+            <HBox spacing="0.0">
+                <VBox fx:id="coordFilasJugador" alignment="CENTER" prefWidth="25.0" prefHeight="300.0" spacing="0.0"/>
+                <GridPane fx:id="tableroJugador" gridLinesVisible="true" prefHeight="300.0" prefWidth="300.0"/>
             </HBox>
         </VBox>
 
-        <!-- ========== INSTRUCCIONES ========== -->
-        <VBox layoutX="553.0" layoutY="475.0" prefHeight="115.0" prefWidth="200.0" spacing="5.0">
-            <Label style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="INSTRUCCIONES:" />
-            <Label text="1. Arrastra barcos a TU FLOTA" wrapText="true" />
-            <Label text="2. Coloca todos tus barcos" wrapText="true" />
-            <Label text="3. Haz clic en INICIAR JUEGO" wrapText="true" />
-            <Label text="4. Dispara en FLOTA ENEMIGA" wrapText="true" />
-            <Label text="5. ¡Hunde todos los barcos!" wrapText="true" />
+        <Label layoutX="348.0" layoutY="40.0" style="-fx-font-size: 16px; -fx-font-weight: bold;"
+               text="BARCOS PARA COLOCAR"/>
+        <VBox fx:id="panelBarcos" layoutX="350.0" layoutY="70.0" prefHeight="342.0" prefWidth="250.0"
+              spacing="10.0"
+              style="-fx-background-color: #f8f9fa; -fx-border-color: #ccc; -fx-border-width: 1; -fx-padding: 10;"/>
+
+        <Label layoutX="670.0" layoutY="40.0" style="-fx-font-size: 16px; -fx-font-weight: bold;"
+               text="FLOTA ENEMIGA"/>
+        <VBox layoutX="600.0" layoutY="70.0" spacing="0.0">
+            <HBox spacing="0.0">
+                <VBox prefWidth="25.0" prefHeight="25.0" spacing="0.0"/>
+                <HBox fx:id="coordColumnasOponente" alignment="CENTER" prefHeight="25.0" spacing="0.0"/>
+            </HBox>
+            <HBox spacing="0.0">
+                <VBox fx:id="coordFilasOponente" alignment="CENTER" prefWidth="25.0" prefHeight="300.0"
+                      spacing="0.0"/>
+                <GridPane fx:id="tableroOponente" gridLinesVisible="true" prefHeight="300.0" prefWidth="300.0"/>
+            </HBox>
         </VBox>
-         <Button fx:id="btnIniciar" layoutX="155.0" layoutY="411.0" onAction="#iniciarJuego" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;" text="🎮 INICIAR JUEGO" />
 
-         <Button fx:id="btnVerOponente" layoutX="338.0" layoutY="411.0" onAction="#mostrarTableroOponente" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;" text="👁️ VER TABLERO OPONENTE" />
+        <HBox layoutX="20.0" layoutY="440.0" spacing="15.0"/>
 
-         <Button fx:id="btnReiniciar" layoutX="609.0" layoutY="411.0" onAction="#reiniciarJuego" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;" text="🔄 REINICIAR" />
+        <!-- BOTONES (NO TOCADOS) -->
+
+        <Button fx:id="btnIniciar" layoutX="50.0" layoutY="451.0" onAction="#iniciarJuego"
+                style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;"
+                text="🎮 INICIAR JUEGO"/>
+
+        <Button fx:id="btnVerOponente" layoutX="233.0" layoutY="451.0" onAction="#mostrarTableroOponente"
+                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;"
+                text="🔍 VER TABLERO OPONENTE"/>
+
+        <Button fx:id="btnReiniciar" layoutX="494.0" layoutY="451.0" onAction="#reiniciarJuego"
+                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20;"
+                text="🔄 REINICIAR"/>
+
+
+        <Label fx:id="lblMensajeJugador"
+               layoutX="100.0"
+               layoutY="420.0"
+               prefWidth="740.0"
+               wrapText="true"
+               alignment="CENTER"
+               style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"
+               text="Esperando colocación de barcos (Presiona  para cambiar orientación de los barcos)" />
+
+
+
+
+
+
+        <VBox layoutX="350.0" layoutY="500.0" prefHeight="130.0" prefWidth="250.0" spacing="5.0">
+            <Label style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="FLOTA DISPONIBLE"/>
+            <VBox prefHeight="132.0" prefWidth="170.0" spacing="10.0">
+                <Label text="• 1 Portaaviones: 4 casillas" wrapText="true" style="-fx-text-fill: #FF8C00;"/>
+                <Label text="• 2 Submarinos: 3 casillas c/u" wrapText="true" style="-fx-text-fill: #A9A9A9;"/>
+                <Label text="• 3 Destructores: 2 casillas c/u" wrapText="true" style="-fx-text-fill: #2ECC71;"/>
+                <Label text="• 4 Fragatas: 1 casilla c/u" wrapText="true" style="-fx-text-fill: #3498DB;"/>
+            </VBox>
+        </VBox>
+
+        <VBox layoutX="50.0" layoutY="500.0" prefHeight="132.0" prefWidth="170.0" spacing="10.0">
+            <Label style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="LEYENDA:"/>
+            <HBox spacing="4.0">
+                <Label style="-fx-font-size: 20px;" text="🔵"/>
+                <Label text="Barco colocado"/>
+            </HBox>
+            <HBox spacing="4.0">
+                <Label style="-fx-font-size: 20px;" text="🌊"/>
+                <Label text="Agua (disparo fallado)"/>
+            </HBox>
+            <HBox spacing="4.0">
+                <Label style="-fx-font-size: 20px;" text="🔥"/>
+                <Label text="Tocado (barco dañado)"/>
+            </HBox>
+            <HBox spacing="4.0">
+                <Label style="-fx-font-size: 20px;" text="💥"/>
+                <Label text="Hundido (barco destruído)"/>
+            </HBox>
+        </VBox>
+
+        <VBox layoutX="600.0" layoutY="500.0" prefHeight="132.0" prefWidth="240.0" spacing="5.0">
+            <Label style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="INSTRUCCIONES:"/>
+            <Label text="1. Arrastra barcos a TU FLOTA" wrapText="true"/>
+            <Label text="2. Coloca todos tus barcos (Usa 'R' para rotar)" wrapText="true"/>
+            <Label text="3. Haz clic en INICIAR JUEGO" wrapText="true"/>
+            <Label text="4. Dispara en FLOTA ENEMIGA" wrapText="true"/>
+            <Label text="5. ¡Hunde todos los barcos!" wrapText="true"/>
+        </VBox>
+
     </children>
 
-    <!-- Padding alrededor de todo -->
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
+
 </AnchorPane>

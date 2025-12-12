@@ -2,74 +2,76 @@ package com.batallanaval.batallanaval.patterns.observer;
 
 import com.batallanaval.batallanaval.model.Jugador;
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+import java.util.function.Consumer;
 
 /**
  * Observador que actualiza la interfaz gráfica.
- * Se ejecuta en el hilo de JavaFX (Platform.runLater).
+ * Utiliza un callback para enviar mensajes al Label del JuegoController.
  */
 public class ObservadorInterfaz implements ObservadorJuego {
     private String nombre;
+    private final Consumer<String> messageCallback;
 
-    public ObservadorInterfaz(String nombre) {
+    public ObservadorInterfaz(String nombre, Consumer<String> messageCallback) {
         this.nombre = nombre;
+        this.messageCallback = messageCallback;
     }
 
     @Override
     public void actualizar(String evento, Jugador jugador, Object datos) {
         // Ejecutar en el hilo de JavaFX
         Platform.runLater(() -> {
+            String mensaje = "";
+
             switch (evento) {
+
                 case "JUEGO_INICIADO":
-                    mostrarNotificacion("🎮 Juego Iniciado",
-                            "¡Que comience la batalla!", AlertType.INFORMATION);
+                    mensaje = "🎮 ¡Juego Iniciado! Que comience la batalla.";
                     break;
 
                 case "BARCO_COLOCADO":
-                    if (datos instanceof String) {
-                        mostrarNotificacion("🚢 Barco Colocado",
-                                "Barco " + datos + " colocado exitosamente", AlertType.INFORMATION);
-                    }
-                    break;
+                    // El controlador (colocarBarco) ya maneja el mensaje detallado con coordenadas.
+                    return;
 
                 case "DISPARO_REALIZADO":
-                    if (datos instanceof String) {
-                        String resultado = (String) datos;
-                        String titulo = resultado.equals("HUNDIDO") ? "💥 ¡HUNDIDO!" :
-                                resultado.equals("TOCADO") ? "🔥 ¡TOCADO!" :
-                                        "🌊 AGUA";
-                        mostrarNotificacion(titulo,
-                                "Disparo: " + resultado, AlertType.INFORMATION);
-                    }
-                    break;
+                    // El controlador (disparar/turnoMaquina) ya maneja los mensajes detallados con coordenadas.
+                    return;
 
                 case "JUEGO_TERMINADO":
                     if (datos instanceof String) {
-                        mostrarNotificacion("🏆 Fin del Juego",
-                                (String) datos, AlertType.INFORMATION);
+                        mensaje = "🏆 Fin del Juego. Ganador: " + (String) datos + ".";
+                    }
+                    break;
+
+                // Este caso es clave para la notificación de la máquina
+                case "CAMBIO_TURNO":
+                    boolean esTurnoJugador = (boolean) datos;
+                    if(esTurnoJugador) {
+                        mensaje = "🎯 ¡Es tu turno! Dispara.";
+                    } else {
+                        // El mensaje de turno de máquina se muestra en turnoMaquina()
+                        return;
                     }
                     break;
 
                 case "ERROR":
                     if (datos instanceof String) {
-                        mostrarNotificacion("❌ Error",
-                                (String) datos, AlertType.ERROR);
+                        mensaje = "❌ ERROR: " + (String) datos;
+                    }
+                    break;
+
+                case "ADVERTENCIA":
+                    if (datos instanceof String) {
+                        mensaje = "⚠️ ADVERTENCIA: " + (String) datos;
                     }
                     break;
             }
-        });
-    }
 
-    /**
-     * Muestra una notificación en pantalla.
-     */
-    private void mostrarNotificacion(String titulo, String mensaje, AlertType tipo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.show();
+            // Llamamos al callback solo si hay un mensaje de evento global
+            if (!mensaje.isEmpty() && messageCallback != null) {
+                this.messageCallback.accept(mensaje);
+            }
+        });
     }
 
     public String getNombre() {

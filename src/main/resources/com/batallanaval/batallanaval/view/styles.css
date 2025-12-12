@@ -266,3 +266,28 @@
         -fx-padding: 10 20;
     }
 }
+/* Estilos para las etiquetas de coordenadas */
+.coord-label-col {
+    -fx-alignment: center; /* Centrar el texto */
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-text-fill: #34495e;
+}
+
+.coord-label-fila {
+    -fx-alignment: center; /* Centrar el texto */
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-text-fill: #34495e;
+}
+
+/* Ajuste del tamaño de las celdas del GridPane */
+/* Asegúrate de que tus celdas de Pane midan 30x30 si quieres 300x300 en total */
+.pane-celda {
+    /* Si el GridPane es 300x300 y es 10x10, cada celda debe ser 30x30 */
+    -fx-pref-width: 30px;
+    -fx-pref-height: 30px;
+    -fx-background-color: #87CEEB; /* Agua - estilo original */
+    -fx-border-color: #4682B4;
+    -fx-border-width: 1px;
+}
