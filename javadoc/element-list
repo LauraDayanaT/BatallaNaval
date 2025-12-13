@@ -1,0 +1,10 @@
+module:com.batallanaval.batallanaval
+com.batallanaval.batallanaval
+com.batallanaval.batallanaval.controller
+com.batallanaval.batallanaval.datastructures
+com.batallanaval.batallanaval.exceptions
+com.batallanaval.batallanaval.model
+com.batallanaval.batallanaval.patterns.composite
+com.batallanaval.batallanaval.patterns.factory
+com.batallanaval.batallanaval.patterns.observer
+com.batallanaval.batallanaval.utils
