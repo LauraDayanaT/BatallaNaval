@@ -14,7 +14,7 @@ public class Barco implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final TipoBarco tipo;          // Tipo de barco (INMUTABLE)
-    private final int tamaño;              // Tamaño en casillas (INMUTABLE)
+    private final int tamanho;              // tamanho en casillas (INMUTABLE)
     private final boolean[] casillas;      // Estado de cada casilla
     private boolean horizontal;            // Orientación
     private int filaInicio;                // Fila inicial (-1 si no colocado)
@@ -33,8 +33,8 @@ public class Barco implements Serializable {
         }
 
         this.tipo = tipo;
-        this.tamaño = tipo.getTamaño();
-        this.casillas = new boolean[tamaño];
+        this.tamanho = tipo.gettamanho();
+        this.casillas = new boolean[tamanho];
         Arrays.fill(this.casillas, true); // Todas las casillas intactas al inicio
 
         this.horizontal = true; // Por defecto horizontal
@@ -47,11 +47,11 @@ public class Barco implements Serializable {
      * Constructor alternativo para compatibilidad con código existente.
      *
      * @param nombre Nombre del barco (se convierte a TipoBarco)
-     * @param tamaño Tamaño del barco
+     * @param tamanho tamaño del barco
      * @deprecated Usar Barco(TipoBarco tipo) en su lugar
      */
     @Deprecated
-    public Barco(String nombre, int tamaño) {
+    public Barco(String nombre, int tamanho) {
         this(TipoBarco.fromNombre(nombre));
     }
 
@@ -80,9 +80,9 @@ public class Barco implements Serializable {
      * @throws IndexOutOfBoundsException si la posición está fuera de rango
      */
     public boolean recibirDisparo(int posicion) {
-        if (posicion < 0 || posicion >= tamaño) {
+        if (posicion < 0 || posicion >= tamanho) {
             throw new IndexOutOfBoundsException(
-                    "Posición " + posicion + " fuera de rango. Tamaño: " + tamaño
+                    "Posición " + posicion + " fuera de rango. tamaño: " + tamanho
             );
         }
 
@@ -123,12 +123,12 @@ public class Barco implements Serializable {
     private int calcularPosicionRelativa(int fila, int columna) {
         if (horizontal) {
             if (fila == filaInicio && columna >= columnaInicio &&
-                    columna < columnaInicio + tamaño) {
+                    columna < columnaInicio + tamanho) {
                 return columna - columnaInicio;
             }
         } else {
             if (columna == columnaInicio && fila >= filaInicio &&
-                    fila < filaInicio + tamaño) {
+                    fila < filaInicio + tamanho) {
                 return fila - filaInicio;
             }
         }
@@ -145,10 +145,10 @@ public class Barco implements Serializable {
     }
 
     /**
-     * @return Tamaño del barco en casillas
+     * @return tamaño del barco en casillas
      */
-    public int getTamaño() {
-        return tamaño;
+    public int gettamanho() {
+        return tamanho;
     }
 
     /**
@@ -228,7 +228,7 @@ public class Barco implements Serializable {
      * @return "I" para intacta, "T" para tocada, "H" para hundida
      */
     public String getRepresentacionCasilla(int posicion) {
-        if (posicion < 0 || posicion >= tamaño) {
+        if (posicion < 0 || posicion >= tamanho) {
             return " ";
         }
         if (estaHundido()) {
@@ -239,9 +239,9 @@ public class Barco implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s (Tamaño: %d) - %s %s",
+        return String.format("%s (tamaño: %d) - %s %s",
                 tipo.getNombre(),
-                tamaño,
+                tamanho,
                 estaColocado() ? "Colocado" : "No colocado",
                 estaHundido() ? "HUNDIDO" : "Activo"
         );

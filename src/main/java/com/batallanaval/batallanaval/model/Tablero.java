@@ -223,31 +223,31 @@ public class Tablero implements Serializable {
 
         // Validar que el barco quepa en la dirección especificada
         if (horizontal) {
-            if (col + barco.getTamaño() > COLUMNAS) {
+            if (col + barco.gettamanho() > COLUMNAS) {
                 return false; // Fuera de límites
             }
             // Verificar superposición
-            for (int i = 0; i < barco.getTamaño(); i++) {
+            for (int i = 0; i < barco.gettamanho(); i++) {
                 if (celdas[fila][col + i].tieneBarco()) {
                     return false; // Superposición
                 }
             }
             // Colocar barco
-            for (int i = 0; i < barco.getTamaño(); i++) {
+            for (int i = 0; i < barco.gettamanho(); i++) {
                 celdas[fila][col + i].colocarBarco(barco, i);
             }
         } else {
-            if (fila + barco.getTamaño() > FILAS) {
+            if (fila + barco.gettamanho() > FILAS) {
                 return false; // Fuera de límites
             }
             // Verificar superposición
-            for (int i = 0; i < barco.getTamaño(); i++) {
+            for (int i = 0; i < barco.gettamanho(); i++) {
                 if (celdas[fila + i][col].tieneBarco()) {
                     return false; // Superposición
                 }
             }
             // Colocar barco
-            for (int i = 0; i < barco.getTamaño(); i++) {
+            for (int i = 0; i < barco.gettamanho(); i++) {
                 celdas[fila + i][col].colocarBarco(barco, i);
             }
         }

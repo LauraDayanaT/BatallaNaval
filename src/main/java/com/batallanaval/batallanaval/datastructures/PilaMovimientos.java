@@ -113,7 +113,7 @@ public class PilaMovimientos<T> implements Serializable {
     }
 
     /**
-     * Obtiene el tamaño actual de la pila.
+     * Obtiene el tamanho actual de la pila.
      *
      * @return Cantidad de elementos en la pila
      */
@@ -214,7 +214,7 @@ public class PilaMovimientos<T> implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("PilaMovimientos[");
-        sb.append("tamaño=").append(tamanio());
+        sb.append("tamanho=").append(tamanio());
         sb.append(", capacidad=").append(capacidad);
         sb.append(", elementos={");
 
@@ -240,7 +240,7 @@ public class PilaMovimientos<T> implements Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append("=== CONTENIDO DE LA PILA ===\n");
         sb.append("Capacidad: ").append(capacidad).append("\n");
-        sb.append("Tamaño actual: ").append(tamanio()).append("\n");
+        sb.append("tamanho actual: ").append(tamanio()).append("\n");
         sb.append("Elementos (del más reciente al más antiguo):\n");
 
         int contador = 1;

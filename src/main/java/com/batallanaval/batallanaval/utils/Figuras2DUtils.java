@@ -68,18 +68,18 @@ public class Figuras2DUtils {
     /**
      * Crea un círculo para representar AGUA (disparo fallido).
      *
-     * @param tamaño Tamaño del círculo
+     * @param tamanho tamaño del círculo
      * @return Circle configurado
      */
-    public static Group crearCirculoAgua(double tamaño) {
-        Circle circulo = new Circle(tamaño / 2);
+    public static Group crearCirculoAgua(double tamanho) {
+        Circle circulo = new Circle(tamanho / 2);
         circulo.setFill(COLOR_AGUA);
         circulo.setStroke(Color.BLUE);
         circulo.setStrokeWidth(2);
         circulo.setEffect(crearSombraExterna());
 
         // Agregar onda de agua (círculo concéntrico)
-        Circle onda = new Circle(tamaño / 2 - 2);
+        Circle onda = new Circle(tamanho / 2 - 2);
         onda.setFill(Color.TRANSPARENT);
         onda.setStroke(Color.rgb(173, 216, 230, 0.7)); // Azul claro
         onda.setStrokeWidth(1);
@@ -92,11 +92,11 @@ public class Figuras2DUtils {
     /**
      * Crea un círculo para representar TOCADO (barco dañado).
      *
-     * @param tamaño Tamaño del círculo
+     * @param tamanho tamaño del círculo
      * @return Group con círculo y efecto de fuego
      */
-    public static Group crearCirculoTocado(double tamaño) {
-        Circle circulo = new Circle(tamaño / 2);
+    public static Group crearCirculoTocado(double tamanho) {
+        Circle circulo = new Circle(tamanho / 2);
         circulo.setFill(COLOR_TOCADO);
         circulo.setStroke(Color.RED);
         circulo.setStrokeWidth(2);
@@ -105,9 +105,9 @@ public class Figuras2DUtils {
         // Agregar efecto de fuego (triángulo interior)
         Polygon fuego = new Polygon();
         fuego.getPoints().addAll(
-                tamaño * 0.3, tamaño * 0.7,
-                tamaño * 0.5, tamaño * 0.3,
-                tamaño * 0.7, tamaño * 0.7
+                tamanho * 0.3, tamanho * 0.7,
+                tamanho * 0.5, tamanho * 0.3,
+                tamanho * 0.7, tamanho * 0.7
         );
         fuego.setFill(Color.ORANGE);
         fuego.setStroke(Color.YELLOW);
@@ -119,19 +119,19 @@ public class Figuras2DUtils {
     /**
      * Crea un círculo para representar HUNDIDO (barco destruido).
      *
-     * @param tamaño Tamaño del círculo
+     * @param tamanho tamaño del círculo
      * @return Group con círculo y cruz de destrucción
      */
-    public static Group crearCirculoHundido(double tamaño) {
-        Circle circulo = new Circle(tamaño / 2);
+    public static Group crearCirculoHundido(double tamanho) {
+        Circle circulo = new Circle(tamanho / 2);
         circulo.setFill(COLOR_HUNDIDO);
         circulo.setStroke(Color.DARKRED);
         circulo.setStrokeWidth(3);
         circulo.setEffect(crearSombraInterna());
 
         // Agregar cruz de destrucción
-        Line cruz1 = new Line(tamaño * 0.2, tamaño * 0.2, tamaño * 0.8, tamaño * 0.8);
-        Line cruz2 = new Line(tamaño * 0.8, tamaño * 0.2, tamaño * 0.2, tamaño * 0.8);
+        Line cruz1 = new Line(tamanho * 0.2, tamanho * 0.2, tamanho * 0.8, tamanho * 0.8);
+        Line cruz2 = new Line(tamanho * 0.8, tamanho * 0.2, tamanho * 0.2, tamanho * 0.8);
         cruz1.setStroke(Color.BLACK);
         cruz1.setStrokeWidth(2);
         cruz2.setStroke(Color.BLACK);
@@ -433,9 +433,9 @@ public class Figuras2DUtils {
     /**
      * Crea una X para marcar disparo repetido.
      */
-    public static Group crearMarcaRepetido(double tamaño) {
-        Line linea1 = new Line(tamaño * 0.2, tamaño * 0.2, tamaño * 0.8, tamaño * 0.8);
-        Line linea2 = new Line(tamaño * 0.8, tamaño * 0.2, tamaño * 0.2, tamaño * 0.8);
+    public static Group crearMarcaRepetido(double tamanho) {
+        Line linea1 = new Line(tamanho * 0.2, tamanho * 0.2, tamanho * 0.8, tamanho * 0.8);
+        Line linea2 = new Line(tamanho * 0.8, tamanho * 0.2, tamanho * 0.2, tamanho * 0.8);
 
         linea1.setStroke(Color.GRAY);
         linea1.setStrokeWidth(3);
@@ -454,25 +454,25 @@ public class Figuras2DUtils {
     /**
      * Crea una flecha para indicar orientación.
      */
-    public static Polygon crearFlecha(double tamaño, boolean derecha) {
+    public static Polygon crearFlecha(double tamanho, boolean derecha) {
         Polygon flecha = new Polygon();
 
         if (derecha) {
             flecha.getPoints().addAll(
-                    tamaño * 0.1, tamaño * 0.3,
-                    tamaño * 0.7, tamaño * 0.3,
-                    tamaño * 0.7, tamaño * 0.1,
-                    tamaño * 0.9, tamaño * 0.5,
-                    tamaño * 0.7, tamaño * 0.9,
-                    tamaño * 0.7, tamaño * 0.7,
-                    tamaño * 0.1, tamaño * 0.7
+                    tamanho * 0.1, tamanho * 0.3,
+                    tamanho * 0.7, tamanho * 0.3,
+                    tamanho * 0.7, tamanho * 0.1,
+                    tamanho * 0.9, tamanho * 0.5,
+                    tamanho * 0.7, tamanho * 0.9,
+                    tamanho * 0.7, tamanho * 0.7,
+                    tamanho * 0.1, tamanho * 0.7
             );
         } else {
             flecha.getPoints().addAll(
-                    tamaño * 0.3, tamaño * 0.1,
-                    tamaño * 0.3, tamaño * 0.9,
-                    tamaño * 0.1, tamaño * 0.7,
-                    tamaño * 0.1, tamaño * 0.3
+                    tamanho * 0.3, tamanho * 0.1,
+                    tamanho * 0.3, tamanho * 0.9,
+                    tamanho * 0.1, tamanho * 0.7,
+                    tamanho * 0.1, tamanho * 0.3
             );
         }
 
@@ -487,8 +487,8 @@ public class Figuras2DUtils {
     /**
      * Crea una celda de tablero con efecto de agua.
      */
-    public static Group crearCeldaTablero(double tamaño) {
-        Rectangle celda = new Rectangle(tamaño, tamaño);
+    public static Group crearCeldaTablero(double tamanho) {
+        Rectangle celda = new Rectangle(tamanho, tamanho);
         celda.setFill(COLOR_TABLERO);
         celda.setStroke(COLOR_BORDE);
         celda.setStrokeWidth(1.5);
@@ -498,9 +498,9 @@ public class Figuras2DUtils {
         // Efecto de olas (líneas onduladas)
         Path ola = new Path();
         ola.getElements().addAll(
-                new MoveTo(tamaño * 0.1, tamaño * 0.5),
-                new QuadCurveTo(tamaño * 0.3, tamaño * 0.4, tamaño * 0.5, tamaño * 0.5),
-                new QuadCurveTo(tamaño * 0.7, tamaño * 0.6, tamaño * 0.9, tamaño * 0.5)
+                new MoveTo(tamanho * 0.1, tamanho * 0.5),
+                new QuadCurveTo(tamanho * 0.3, tamanho * 0.4, tamanho * 0.5, tamanho * 0.5),
+                new QuadCurveTo(tamanho * 0.7, tamanho * 0.6, tamanho * 0.9, tamanho * 0.5)
         );
         ola.setStroke(Color.rgb(173, 216, 230, 0.5)); // Azul claro
         ola.setStrokeWidth(1);
@@ -550,16 +550,16 @@ public class Figuras2DUtils {
     /**
      * Crea la figura correspondiente a un resultado de disparo.
      */
-    public static Group crearFiguraResultado(String resultado, double tamaño) {
+    public static Group crearFiguraResultado(String resultado, double tamanho) {
         switch (resultado.toUpperCase()) {
             case "TOCADO":
-                return crearCirculoTocado(tamaño);
+                return crearCirculoTocado(tamanho);
             case "HUNDIDO":
-                return crearCirculoHundido(tamaño);
+                return crearCirculoHundido(tamanho);
             case "REPETIDO":
-                return crearMarcaRepetido(tamaño);
+                return crearMarcaRepetido(tamanho);
             default:
-                return crearCirculoAgua(tamaño);
+                return crearCirculoAgua(tamanho);
         }
     }
 

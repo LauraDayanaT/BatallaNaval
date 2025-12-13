@@ -34,13 +34,13 @@ public class BarcoFactory {
     }
 
     /**
-     * Crea un barco basado en su tamaño.
+     * Crea un barco basado en su tamanho.
      *
-     * @param tamaño Tamaño del barco (1-4)
+     * @param tamanho tamanho del barco (1-4)
      * @return Nueva instancia de Barco
      */
-    public static Barco crearBarcoPorTamaño(int tamaño) {
-        switch (tamaño) {
+    public static Barco crearBarcoPortamanho(int tamanho) {
+        switch (tamanho) {
             case 4:
                 return crearBarco(TipoBarco.PORTAVIONES);
             case 3:
@@ -50,7 +50,7 @@ public class BarcoFactory {
             case 1:
                 return crearBarco(TipoBarco.FRAGATA);
             default:
-                throw new IllegalArgumentException("Tamaño de barco inválido: " + tamaño);
+                throw new IllegalArgumentException("tamanho de barco inválido: " + tamanho);
         }
     }
 

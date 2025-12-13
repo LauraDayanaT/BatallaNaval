@@ -84,7 +84,7 @@ public class JuegoObservable extends SujetoJuego {
      * Notifica el fin del juego.
      */
     public void notificarJuegoTerminado(String ganador) {
-        notificarObservadores(JUEGO_TERMINADO, null, "Ganador: " + ganador);
+        notificarObservadores(JUEGO_TERMINADO, null, " " + ganador);
 
         if (ganador.contains("Humano")) {
             notificarObservadores(JUGADOR_GANO, null, "¡El jugador humano ganó!");

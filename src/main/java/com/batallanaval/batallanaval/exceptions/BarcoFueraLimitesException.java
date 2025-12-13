@@ -10,7 +10,7 @@ public class BarcoFueraLimitesException extends RuntimeException {
     private static final long serialVersionUID = 4L;
 
     private final String tipoBarco;
-    private final int tamaño;
+    private final int tamanho;
     private final int fila;
     private final int columna;
     private final boolean horizontal;
@@ -19,18 +19,18 @@ public class BarcoFueraLimitesException extends RuntimeException {
      * Constructor con todos los detalles.
      *
      * @param tipoBarco Tipo de barco
-     * @param tamaño Tamaño del barco
+     * @param tamanho tamanho del barco
      * @param fila Fila donde se intentó colocar
      * @param columna Columna donde se intentó colocar
      * @param horizontal Orientación del barco
      */
-    public BarcoFueraLimitesException(String tipoBarco, int tamaño, int fila,
+    public BarcoFueraLimitesException(String tipoBarco, int tamanho, int fila,
                                       int columna, boolean horizontal) {
-        super(String.format("%s (tamaño %d) no cabe en (%d, %d) %s",
-                tipoBarco, tamaño, fila, columna,
+        super(String.format("%s (tamanho %d) no cabe en (%d, %d) %s",
+                tipoBarco, tamanho, fila, columna,
                 horizontal ? "horizontal" : "vertical"));
         this.tipoBarco = tipoBarco;
-        this.tamaño = tamaño;
+        this.tamanho = tamanho;
         this.fila = fila;
         this.columna = columna;
         this.horizontal = horizontal;
@@ -44,10 +44,10 @@ public class BarcoFueraLimitesException extends RuntimeException {
     }
 
     /**
-     * @return Tamaño del barco
+     * @return tamanho del barco
      */
-    public int getTamaño() {
-        return tamaño;
+    public int gettamanho() {
+        return tamanho;
     }
 
     /**
@@ -74,8 +74,8 @@ public class BarcoFueraLimitesException extends RuntimeException {
     @Override
     public String toString() {
         return String.format(
-                "BarcoFueraLimitesException{tipoBarco=%s, tamaño=%d, fila=%d, columna=%d, horizontal=%b}",
-                tipoBarco, tamaño, fila, columna, horizontal
+                "BarcoFueraLimitesException{tipoBarco=%s, tamanho=%d, fila=%d, columna=%d, horizontal=%b}",
+                tipoBarco, tamanho, fila, columna, horizontal
         );
     }
 }

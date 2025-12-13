@@ -17,9 +17,9 @@ public interface ComponenteFlota {
     String getNombre();
 
     /**
-     * Obtiene el tamaño total (casillas ocupadas).
+     * Obtiene el tamanho total (casillas ocupadas).
      */
-    int getTamañoTotal();
+    int gettamanhoTotal();
 
     /**
      * Obtiene la cantidad de barcos en este componente.

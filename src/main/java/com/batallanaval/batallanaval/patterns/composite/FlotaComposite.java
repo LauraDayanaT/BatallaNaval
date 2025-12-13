@@ -23,10 +23,10 @@ public class FlotaComposite implements ComponenteFlota {
     }
 
     @Override
-    public int getTamañoTotal() {
+    public int gettamanhoTotal() {
         int total = 0;
         for (Barco barco : barcos) {
-            total += barco.getTamaño();
+            total += barco.gettamanho();
         }
         return total;
     }
@@ -57,12 +57,12 @@ public class FlotaComposite implements ComponenteFlota {
     public void mostrarInformacion() {
         System.out.println("=== FLOTA: " + nombre + " ===");
         System.out.println("Barcos: " + getCantidadBarcos());
-        System.out.println("Tamaño total: " + getTamañoTotal() + " casillas");
+        System.out.println("tamanho total: " + gettamanhoTotal() + " casillas");
         System.out.println("Hundida completamente: " + estaCompletamenteHundido());
 
         for (Barco barco : barcos) {
             System.out.println("  - " + barco.getNombre() +
-                    " (Tamaño: " + barco.getTamaño() +
+                    " (tamanho: " + barco.gettamanho() +
                     ", Hundido: " + barco.estaHundido() + ")");
         }
     }

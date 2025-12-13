@@ -6,18 +6,18 @@ public enum TipoBarco {
     DESTRUCTOR(2, "Destructor", "⚓"),
     FRAGATA(1, "Fragata", "⛵");
 
-    private final int tamaño;
+    private final int tamanho;
     private final String nombre;
     private final String icono;
 
-    TipoBarco(int tamaño, String nombre, String icono) {
-        this.tamaño = tamaño;
+    TipoBarco(int tamanho, String nombre, String icono) {
+        this.tamanho = tamanho;
         this.nombre = nombre;
         this.icono = icono;
     }
 
-    public int getTamaño() {
-        return tamaño;
+    public int gettamanho() {
+        return tamanho;
     }
 
     public String getNombre() {

@@ -20,7 +20,7 @@
     <center>
         <VBox alignment="CENTER" BorderPane.alignment="CENTER">
             <!--
-                AJUSTE DE TAMAÑO:
+                AJUSTE DE tamanho:
                 11 columnas × 50px = 550px (columnas de juego)
                 + 40px (columna de encabezados) = 590px mínimo
                 Mismo cálculo para filas

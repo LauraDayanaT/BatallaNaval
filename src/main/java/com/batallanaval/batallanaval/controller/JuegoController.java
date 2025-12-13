@@ -22,25 +22,26 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.shape.*;
 import javafx.scene.Group;
-import javafx.scene.control.Label; // ¡ESTA LÍNEA FALTA!
+import javafx.scene.control.Label;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import javafx.scene.input.KeyCode;
+
 /**
  * Controlador principal del juego Batalla Naval.
  * Maneja la lógica del juego, interacción del usuario y comunicación entre modelo y vista.
- * Implementa el patrón Observer para notificaciones automáticas.
- * Implementa estructura de datos Pila para historial de movimientos.
- * Implementa figuras 2D JavaFX para elementos del juego.
+ * Implementa el patrón Observer para notificaciones automáticas y la estructura de datos Pila
+ * para el historial de movimientos. Utiliza figuras 2D de JavaFX para la representación visual.
  *
  * @author [Tu Nombre]
  * @version 5.0
  */
 public class JuegoController {
 
-
-
+    // Variables para manejar el barco que el usuario está arrastrando
+    private Barco barcoArrastrado = null;
+    private Pane paneBarcoArrastrado = null;
 
     // Nuevas inyecciones para las coordenadas
     @FXML private HBox coordColumnasJugador;
@@ -48,21 +49,28 @@ public class JuegoController {
     @FXML private HBox coordColumnasOponente;
     @FXML private VBox coordFilasOponente;
 
+    /** Contenedor principal para la gestión del foco y eventos de teclado. */
     @FXML private AnchorPane mainAnchorPane;
-    @FXML private GridPane tableroJugador;      // Tablero de posición del jugador humano
-    @FXML private VBox panelBarcos;             // Panel lateral para seleccionar barcos
-    @FXML private GridPane tableroOponente;     // Tablero principal para disparar al oponente
+    /** Tablero visual donde el jugador coloca sus barcos. */
+    @FXML private GridPane tableroJugador;
+    /** Panel lateral que contiene los barcos disponibles para arrastrar. */
+    @FXML private VBox panelBarcos;
+    /** Tablero donde el jugador dispara al oponente. */
+    @FXML private GridPane tableroOponente;
 
     private Jugador jugador;              // Jugador humano
     private Jugador maquina;              // Jugador máquina
-    // NUEVA VARIABLE: true = horizontal, false = vertical
-    private boolean orientacionHorizontal = true;
-    private boolean juegoIniciado = false;
-    private boolean turnoJugador = true;  // true = turno jugador, false = turno máquina
 
-    // ... otras inyecciones de HBox, VBox, GridPane
+    /** Indica la orientación del barco a colocar: true=Horizontal, false=Vertical. */
+    private boolean orientacionHorizontal = true;
+    /** Indica si el juego ha comenzado (fase de disparos). */
+    private boolean juegoIniciado = false;
+    /** Indica el turno actual: true=Jugador, false=Máquina. */
+    private boolean turnoJugador = true;
+
+    /** Etiqueta de la interfaz para mostrar mensajes al jugador. */
     @FXML private Label lblMensajeJugador;
-    // ...
+
     // ========== OBSERVER PATTERN ==========
     private JuegoObservable juegoObservable;
     private ObservadorConsola observadorConsola;
@@ -74,6 +82,10 @@ public class JuegoController {
 
     // ========== INICIALIZACIÓN ==========
 
+    /**
+     * Método de inicialización llamado automáticamente por JavaFX al cargar el FXML.
+     * Configura el modelo, inicializa observadores y estructuras de datos, y construye la interfaz.
+     */
     @FXML
     public void initialize() {
         System.out.println("🚀 Inicializando JuegoController...");
@@ -135,7 +147,8 @@ public class JuegoController {
     }
 
     /**
-     * Actualiza el mensaje visible para el jugador.
+     * Actualiza el mensaje visible para el jugador en la etiqueta lblMensajeJugador.
+     * @param mensaje El texto a mostrar.
      */
     private void mostrarMensaje(String mensaje) {
         if (lblMensajeJugador != null) {
@@ -144,12 +157,13 @@ public class JuegoController {
     }
 
     /**
-     * Inicializa el sistema de observadores.
+     * Inicializa el sistema de observadores, creando e inyectando el callback
+     * del método mostrarMensaje al ObservadorInterfaz.
      */
     private void inicializarObservadores() {
         juegoObservable = new JuegoObservable();
 
-        // Crear observadores
+        // Crear observadores. Se pasa this::mostrarMensaje al ObservadorInterfaz.
         observadorConsola = new ObservadorConsola("Consola");
         observadorInterfaz = new ObservadorInterfaz("Interfaz", this::mostrarMensaje);
         observadorGuardado = new ObservadorGuardado();
@@ -163,12 +177,7 @@ public class JuegoController {
     }
 
     /**
-     * Crea las etiquetas A-J y 1-10 para los tableros.
-     * Se llama desde initialize().
-     */
-    /**
-     * Crea las etiquetas A-J y 1-10 para los tableros.
-     * Se llama desde initialize().
+     * Crea las etiquetas A-J (columnas) y 1-10 (filas) para ambos tableros visuales.
      */
     private void crearCoordenadasVisuales() {
         System.out.println("🏷️ Creando coordenadas visuales...");
@@ -208,10 +217,10 @@ public class JuegoController {
     }
 
 
-
-    /* */
-    // Este método debe ser llamado desde tu clase Application principal, después de cargar el FXML.
-
+    /**
+     * Método auxiliar para configurar eventos de teclado en la Scene.
+     * @param scene La escena principal de JavaFX.
+     */
     public void configurarEventosTeclado(javafx.scene.Scene scene) {
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == javafx.scene.input.KeyCode.R) {
@@ -219,8 +228,9 @@ public class JuegoController {
             }
         });
     }
+
     /**
-     * Alterna la orientación del barco a colocar (Horizontal/Vertical).
+     * Alterna la orientación del barco actualmente arrastrado entre Horizontal y Vertical.
      */
     public void alternarOrientacion() {
         if (juegoIniciado) return;
@@ -233,8 +243,7 @@ public class JuegoController {
     }
 
     /**
-     * Inicializa las estructuras de datos del juego.
-     * Cumple con el requisito de implementar estructura de datos explícita.
+     * Inicializa la estructura de datos Pila para el historial de movimientos.
      */
     private void inicializarEstructurasDatos() {
         System.out.println("📊 Inicializando estructuras de datos...");
@@ -250,21 +259,20 @@ public class JuegoController {
     }
 
     /**
-     * Demuestra el funcionamiento básico de la pila.
-     * Solo para propósitos de demostración/depuración.
+     * Demuestra el funcionamiento básico de la pila (solo para depuración).
      */
     private void demostrarUsoPila() {
         System.out.println("🔍 Demostrando uso de la pila:");
         System.out.println("   - Pila vacía: " + pilaMovimientos.estaVacia());
         System.out.println("   - Capacidad: " + pilaMovimientos.getCapacidad());
-        System.out.println("   - Tamaño actual: " + pilaMovimientos.tamanio());
+        System.out.println("   - tamanho actual: " + pilaMovimientos.tamanio());
     }
 
     // ========== CREACIÓN DE TABLEROS VISUALES ==========
 
     /**
-     * Crea el tablero visual 10x10 para el jugador humano.
-     * HU-1: Colocación de barcos mediante arrastre.
+     * Crea el tablero visual 10x10 para el jugador humano, configurando el evento de soltar
+     * el arrastre para la colocación de barcos.
      */
     public void crearTableroVisual() {
         System.out.println("📐 Creando tablero del jugador (10x10)...");
@@ -293,8 +301,8 @@ public class JuegoController {
     }
 
     /**
-     * Crea el tablero 10x10 para el oponente (máquina).
-     * HU-2: Disparos mediante clic.
+     * Crea el tablero 10x10 para el oponente (máquina), configurando el evento de clic
+     * para realizar disparos.
      */
     private void crearTableroOponente() {
         System.out.println("📐 Creando tablero del oponente (10x10)...");
@@ -325,24 +333,24 @@ public class JuegoController {
     // ========== PANEL DE BARCOS ==========
 
     /**
-     * Crea el panel lateral con todos los barcos disponibles para colocar.
-     * HU-1: Colocación de barcos del jugador humano.
+     * Crea el panel lateral con todos los barcos disponibles para colocar, generando un Pane
+     * con figura 2D para cada uno.
      */
     private void crearPanelBarcos() {
         System.out.println("🚢 Creando panel de barcos con figuras 2D...");
 
-        // 1 Portaaviones (tamaño 4)
+        // 1 Portaaviones (tamanho 4)
         Barco portaaviones = BarcoFactory.crearBarco(TipoBarco.PORTAVIONES);
         panelBarcos.getChildren().add(crearBarcoPaneFigura(portaaviones));
 
-        // 2 Submarinos (tamaño 3 cada uno)
+        // 2 Submarinos (tamanho 3 cada uno)
         Barco sub1 = BarcoFactory.crearBarco(TipoBarco.SUBMARINO);
         panelBarcos.getChildren().add(crearBarcoPaneFigura(sub1));
 
         Barco sub2 = BarcoFactory.crearBarco(TipoBarco.SUBMARINO);
         panelBarcos.getChildren().add(crearBarcoPaneFigura(sub2));
 
-        // 3 Destructores (tamaño 2 cada uno)
+        // 3 Destructores (tamanho 2 cada uno)
         Barco dest1 = BarcoFactory.crearBarco(TipoBarco.DESTRUCTOR);
         panelBarcos.getChildren().add(crearBarcoPaneFigura(dest1));
 
@@ -352,7 +360,7 @@ public class JuegoController {
         Barco dest3 = BarcoFactory.crearBarco(TipoBarco.DESTRUCTOR);
         panelBarcos.getChildren().add(crearBarcoPaneFigura(dest3));
 
-        // 4 Fragatas (tamaño 1 cada una)
+        // 4 Fragatas (tamanho 1 cada una)
         Barco frag1 = BarcoFactory.crearBarco(TipoBarco.FRAGATA);
         panelBarcos.getChildren().add(crearBarcoPaneFigura(frag1));
 
@@ -370,11 +378,12 @@ public class JuegoController {
 
     /**
      * Crea un Pane visual para representar un barco en el panel lateral (VERSIÓN ANTIGUA).
-     * Mantenido para compatibilidad.
+     * @param barco El objeto Barco.
+     * @return El Pane visual.
      */
     private Pane crearBarcoPane(Barco barco) {
         Pane pane = new Pane();
-        pane.setPrefSize(barco.getTamaño() * 35, 30);
+        pane.setPrefSize(barco.gettamanho() * 35, 30);
         pane.setStyle("-fx-background-color: #8B4513; -fx-border-color: #654321; -fx-border-width: 2;");
 
         // Almacenar referencia al objeto Barco en el UserData del Pane
@@ -391,16 +400,18 @@ public class JuegoController {
 
     /**
      * Crea un Pane visual con FIGURA 2D para representar un barco en el panel lateral.
-     * NUEVA VERSIÓN con figuras JavaFX.
+     * Configura el evento onDragDetected para capturar el barco que se está arrastrando.
+     * @param barco El objeto Barco.
+     * @return El Pane visual.
      */
     private Pane crearBarcoPaneFigura(Barco barco) {
         Pane pane = new Pane();
-        pane.setPrefSize(barco.getTamaño() * 35, 30);
+        pane.setPrefSize(barco.gettamanho() * 35, 30);
 
         // Crear figura 2D para el barco - CAMBIADO a Group
         Group figuraBarco = Figuras2DUtils.crearFiguraBarcoPorTipo(
                 barco.getNombre(),
-                barco.getTamaño() * 35,
+                barco.gettamanho() * 35,
                 30,
                 true  // Horizontal por defecto en el panel
         );
@@ -420,6 +431,10 @@ public class JuegoController {
             if (!juegoIniciado) {
                 pane.startFullDrag();
                 System.out.println("🚢 Arrastrando barco: " + barco.getNombre() + " (Figura 2D)");
+
+                // Guardar la referencia al barco y su pane al iniciar el arrastre
+                this.barcoArrastrado = barco;
+                this.paneBarcoArrastrado = pane;
             }
         });
 
@@ -434,32 +449,29 @@ public class JuegoController {
     // ========== COLOCACIÓN DE BARCOS (HU-1) ==========
 
     /**
-     * Coloca un barco en la posición especificada del tablero del jugador.
-     * HU-1: Validación de colocación de barcos.
+     * Coloca el barco arrastrado en la posición especificada del tablero del jugador.
+     * Utiliza las referencias almacenadas en barcoArrastrado y paneBarcoArrastrado.
+     * @param fila Fila de colocación (0-9).
+     * @param col Columna de colocación (0-9).
+     * @param celda La celda de la interfaz donde se soltó el arrastre.
      */
     private void colocarBarco(int fila, int col, Pane celda) {
-        if (panelBarcos.getChildren().isEmpty()) {
-            // Barco no disponible
-            mostrarMensaje("🚢 No hay barcos disponibles para colocar.");
+
+        // Usar el barco y el pane de las variables de estado (arrastre libre)
+        Barco barco = this.barcoArrastrado;
+        Pane barcoPane = this.paneBarcoArrastrado;
+
+        if (barco == null || barcoPane == null) {
+            // Error si no se arrastró un barco correctamente
+            mostrarMensaje("🚢 Error: Selecciona un barco válido del panel para colocar.");
             return;
         }
 
-        // Obtener el primer barco del panel lateral
-        Pane barcoPane = (Pane) panelBarcos.getChildren().get(0);
-        Barco barco = (Barco) barcoPane.getUserData();
-
-        if (barco == null) {
-            // Error interno
-            mostrarMensaje("❌ Error: Barco no encontrado. Intenta reiniciar.");
-            juegoObservable.notificarError("Barco no encontrado en UserData");
-            return;
-        }
 
         try {
             // Encontrar el índice del barco en la flota
             int indiceBarco = encontrarIndiceBarco(barco);
             if (indiceBarco == -1) {
-                // Error interno
                 mostrarMensaje("❌ Error: Barco no encontrado en la flota. Intenta reiniciar.");
                 juegoObservable.notificarError("Barco no encontrado en la flota: " + barco.getNombre());
                 return;
@@ -471,22 +483,23 @@ public class JuegoController {
 
             if (colocado) {
                 // Colocación exitosa - usar FIGURA 2D
-                marcarBarcoEnTablero(fila, col, barco.getTamaño(), horizontal, barco.getNombre());
+                marcarBarcoEnTablero(fila, col, barco.gettamanho(), horizontal, barco.getNombre());
 
+                // Remover el Pane que fue arrastrado y limpiar referencias
                 panelBarcos.getChildren().remove(barcoPane);
+                this.barcoArrastrado = null;
+                this.paneBarcoArrastrado = null;
+
 
                 // NOTIFICAR OBSERVADORES
                 juegoObservable.notificarBarcoColocado(jugador, barco.getNombre(), fila, col);
 
-                // ************************************************************
-                // CAMBIO CLAVE: Formato (Columna Letra, Fila Número)
-                // ************************************************************
-                char letraColumna = (char) ('A' + col); // Columna (0->A, 1->B...)
-                int numeroFila = fila + 1;              // Fila (0->1, 1->2...)
-
+                // Generar mensaje detallado (Columna Letra, Fila Número)
+                char letraColumna = (char) ('A' + col);
+                int numeroFila = fila + 1;
                 String mensajeColocacion = String.format("✅ Barco %s colocado en %c%d.",
                         barco.getNombre(), letraColumna, numeroFila);
-                // ************************************************************
+
 
                 System.out.println(mensajeColocacion + " Orientación: " + (horizontal ? "Horizontal" : "Vertical"));
 
@@ -499,7 +512,7 @@ public class JuegoController {
                     );
                     System.out.println("🎉 ¡Todos los barcos colocados! El juego puede comenzar.");
 
-                    // Usamos el mensaje específico, seguido de la instrucción final
+                    // Mensaje final de listo
                     mostrarMensaje(mensajeColocacion + " 🎉 ¡Listo! Clic en 'INICIAR JUEGO' para empezar.");
                 } else {
                     // Mensaje de éxito parcial con coordenadas y recordatorio de rotación
@@ -509,7 +522,6 @@ public class JuegoController {
             } else {
 
 
-                // Mensaje de falla a Label
                 mostrarMensaje("❌ Ubicación inválida. No cabe o está superpuesto.");
                 juegoObservable.notificarError("Ubicación inválida para barco: " + barco.getNombre());
             }
@@ -525,25 +537,34 @@ public class JuegoController {
 
     /**
      * Encuentra el índice de un barco en la flota del jugador.
+     * @param barcoBuscado El barco a buscar.
+     * @return El índice del barco en la flota, o -1 si no se encuentra.
      */
     private int encontrarIndiceBarco(Barco barcoBuscado) {
-     return jugador.getBarcos().indexOf(barcoBuscado);
+        return jugador.getBarcos().indexOf(barcoBuscado);
     }
 
     /**
      * Marca una celda (o celdas) como conteniendo un barco (VERSIÓN ANTIGUA).
+     * @param celda El Pane de la celda.
+     * @param tamanho tamanho del barco.
+     * @param horizontal Orientación del barco.
      */
-    private void marcarCeldaComoBarco(Pane celda, int tamaño, boolean horizontal) {
+    private void marcarCeldaComoBarco(Pane celda, int tamanho, boolean horizontal) {
         celda.setStyle("-fx-background-color: #8B4513; -fx-border-color: #654321;");
-        // Nota: Para barcos de tamaño > 1, deberíamos marcar múltiples celdas
-        // Esto es una simplificación para la demo
+        // Nota: Para barcos de tamanho > 1, deberíamos marcar múltiples celdas
     }
 
     /**
-     * Marca una celda como conteniendo un barco usando FIGURA 2D (NUEVA VERSIÓN).
+     * Marca una celda como conteniendo un barco usando FIGURA 2D.
+     * @param fila Fila de inicio.
+     * @param col Columna de inicio.
+     * @param tamanho tamanho del barco.
+     * @param horizontal Orientación del barco.
+     * @param nombre Nombre del barco para elegir la figura.
      */
-    private void marcarBarcoEnTablero(int fila, int col, int tamaño, boolean horizontal, String nombre) {
-        for (int i = 0; i < tamaño; i++) {
+    private void marcarBarcoEnTablero(int fila, int col, int tamanho, boolean horizontal, String nombre) {
+        for (int i = 0; i < tamanho; i++) {
 
             int f = horizontal ? fila : fila + i;
             int c = horizontal ? col + i : col;
@@ -564,6 +585,14 @@ public class JuegoController {
             }
         }
     }
+
+    /**
+     * Obtiene el Pane (celda) de un GridPane en la posición (fila, columna) específica.
+     * @param grid El GridPane donde buscar.
+     * @param fila Fila (índice Y).
+     * @param columna Columna (índice X).
+     * @return El Pane de la celda, o null si no se encuentra.
+     */
     private Pane obtenerCelda(GridPane grid, int fila, int columna) {
         for (javafx.scene.Node n : grid.getChildren()) {
             Integer r = GridPane.getRowIndex(n);
@@ -578,7 +607,8 @@ public class JuegoController {
 
 
     /**
-     * Muestra error de colocación con figura 2D.
+     * Muestra error de colocación con una figura X roja en la celda.
+     * @param celda El Pane de la celda.
      */
     private void mostrarErrorColocacion(Pane celda) {
         celda.getChildren().clear();
@@ -596,7 +626,10 @@ public class JuegoController {
     }
 
     /**
-     * Maneja excepciones durante la colocación de barcos.
+     * Maneja excepciones de Posición/Límite inválido durante la colocación de barcos,
+     * mostrando figuras 2D de advertencia.
+     * @param e La excepción Runtime capturada.
+     * @param celda La celda donde ocurrió el error.
      */
     private void manejarExcepcionColocacion(RuntimeException e, Pane celda) {
         celda.getChildren().clear();
@@ -642,15 +675,12 @@ public class JuegoController {
     // ========== DISPAROS (HU-2) ==========
 
     /**
-     * Realiza un disparo en la posición especificada del tablero del oponente.
-     * HU-2: Lógica de disparos (agua, tocado, hundido) con FIGURAS 2D.
+     * Realiza un disparo del jugador en la posición especificada del tablero del oponente.
+     * Maneja el flujo de turnos según el resultado (AGUA, TOCADO, HUNDIDO).
+     * @param fila Fila del disparo.
+     * @param col Columna del disparo.
+     * @param celda La celda de la interfaz donde se hizo clic.
      */
-    // Archivo: JuegoController.java
-
-    // Archivo: JuegoController.java
-
-// Archivo: JuegoController.java
-
     private void disparar(int fila, int col, Pane celda) {
         if (!juegoIniciado) {
             mostrarMensaje("⚠️ Juego no iniciado. Coloca todos tus barcos y haz clic en 'Iniciar juego'.");
@@ -667,13 +697,15 @@ public class JuegoController {
         // Realizar disparo
         String resultado = jugador.realizarDisparo(fila, col, maquina);
 
-        // ========== GENERACIÓN DEL MENSAJE DETALLADO ==========
-        char letraColumna = (char) ('A' + col); // Columna (0->A, 1->B...)
-        int numeroFila = fila + 1;              // Fila (0->1, 1->2...)
+        // Generación del mensaje detallado (Columna Letra, Fila Número)
+        char letraColumna = (char) ('A' + col);
+        int numeroFila = fila + 1;
         String coordenada = String.format("%c%d", letraColumna, numeroFila);
-        // ======================================================
 
-        // ... (código de registro y notificación)
+
+        // ========== REGISTRAR Y NOTIFICAR ==========
+        registrarMovimientoEnPila(jugador, resultado, fila, col, true);
+        juegoObservable.notificarDisparo(jugador, resultado, fila, col);
 
         // Actualizar interfaz con FIGURA 2D según resultado
         actualizarCeldaConFigura(celda, resultado, fila, col);
@@ -682,25 +714,22 @@ public class JuegoController {
         // 1. Manejar el flujo de juego y mostrar mensajes en el Label
         if (resultado.equals("TOCADO")) {
             System.out.println("🔥 TOCADO. Tienes otro turno. Haz clic de nuevo.");
-            // Usar el Label con coordenadas
             mostrarMensaje("🔥 ¡TOCADO en " + coordenada + "! Sigue disparando, tienes turno extra.");
 
         } else if (resultado.equals("HUNDIDO")) {
             System.out.println("🎉 HUNDIDO. Tienes otro turno. Haz clic de nuevo.");
-            // Usar el Label con coordenadas
             mostrarMensaje("💥 ¡HUNDIDO en " + coordenada + "! Tienes turno extra.");
             verificarFinJuego();
 
         } else if (resultado.equals("AGUA")) {
             System.out.println("🌊 AGUA. Turno de la máquina.");
-            // Usar el Label con coordenadas y cambio de turno
             mostrarMensaje("🌊 ¡Agua en " + coordenada + "! Fallaste. Turno de la Máquina 🤖.");
 
             // 2. CAMBIO DE TURNO A LA MÁQUINA
             turnoJugador = false;
             juegoObservable.notificarCambioTurno(false);
 
-            // DELAY...
+            // DELAY: Esperar 500ms para que el jugador vea el splash de agua.
             PauseTransition postDelay = new PauseTransition(Duration.millis(500));
             postDelay.setOnFinished(e -> {
                 turnoMaquina();
@@ -709,14 +738,17 @@ public class JuegoController {
 
         } else if (resultado.equals("REPETIDO")) {
             System.out.println("⚠️ Ya Disparaste aquí. Intenta de nuevo.");
-            // Usar el Label con coordenadas
             mostrarMensaje("⚠️ ¡Ya disparaste en " + coordenada + "! Intenta en otra posición.");
         }
     }
 
 
     /**
-     * Actualiza una celda con figura 2D según el resultado del disparo.
+     * Actualiza una celda en el tablero del oponente con una figura 2D según el resultado del disparo.
+     * @param celda El Pane de la celda disparada.
+     * @param resultado Resultado del disparo ("AGUA", "TOCADO", "HUNDIDO", etc.).
+     * @param fila Fila del disparo.
+     * @param col Columna del disparo.
      */
     private void actualizarCeldaConFigura(Pane celda, String resultado, int fila, int col) {
         // Limpiar la celda
@@ -724,7 +756,7 @@ public class JuegoController {
 
         switch (resultado) {
             case "AGUA":
-                // Crear círculo azul de agua - CAMBIADO: hacer cast a Group
+                // Crear círculo azul de agua
                 Group figuraAgua = (Group) Figuras2DUtils.crearFiguraResultado("AGUA", 25);
                 celda.getChildren().add(figuraAgua);
                 System.out.println("🌊 AGUA en (" + fila + "," + col + ") [Figura 2D]");
@@ -734,7 +766,7 @@ public class JuegoController {
                 break;
 
             case "TOCADO":
-                // Crear círculo naranja de tocado - CAMBIADO: hacer cast a Group
+                // Crear círculo naranja de tocado
                 Group figuraTocado = (Group) Figuras2DUtils.crearFiguraResultado("TOCADO", 25);
                 celda.getChildren().add(figuraTocado);
                 System.out.println("🔥 TOCADO en (" + fila + "," + col + ") [Figura 2D]");
@@ -742,7 +774,7 @@ public class JuegoController {
                 break;
 
             case "HUNDIDO":
-                // Crear círculo rojo de hundido - CAMBIADO: hacer cast a Group
+                // Crear círculo rojo de hundido
                 Group figuraHundido = (Group) Figuras2DUtils.crearFiguraResultado("HUNDIDO", 25);
                 celda.getChildren().add(figuraHundido);
                 System.out.println("💥 HUNDIDO en (" + fila + "," + col + ") [Figura 2D]");
@@ -751,7 +783,7 @@ public class JuegoController {
                 break;
 
             case "REPETIDO":
-                // Crear X gris de repetido - CAMBIADO: hacer cast a Group
+                // Crear X gris de repetido
                 Group figuraRepetido = (Group) Figuras2DUtils.crearFiguraResultado("REPETIDO", 25);
                 celda.getChildren().add(figuraRepetido);
                 System.out.println("⚠️ Ya disparaste aquí [Figura 2D]");
@@ -776,11 +808,9 @@ public class JuegoController {
     }
 
     /**
-     * Turno de la máquina para disparar.
-     * HU-4: Inteligencia artificial de la máquina con FIGURAS 2D.
+     * Turno de la máquina para disparar. Implementa la lógica de la IA.
+     * Muestra el resultado del disparo en el Label y maneja los delays.
      */
-    // Archivo: JuegoController.java
-
     private void turnoMaquina() {
         if (!juegoIniciado || maquina.haPerdido() || jugador.haPerdido()) {
             return;
@@ -801,14 +831,11 @@ public class JuegoController {
             int columna = resultado[1];
             int tipoResultado = resultado[2]; // 0=agua, 1=tocado, 2=hundido
 
-            // ====================================================================
-            // LÓGICA CLAVE: CALCULAR COORDENADA Y MENSAJE
-            // ====================================================================
+            // Generar mensaje detallado (Columna Letra, Fila Número)
             char letraColumna = (char) ('A' + columna);
             int numeroFila = fila + 1;
             String coordenada = String.format("%c%d", letraColumna, numeroFila);
             String mensajeMaquina;
-            // ====================================================================
 
             Pane celda = encontrarCeldaTableroJugador(fila, columna);
 
@@ -849,7 +876,7 @@ public class JuegoController {
                         juegoObservable.notificarDisparo(maquina, "TOCADO", fila, columna);
                         registrarMovimientoEnPila(maquina, "TOCADO", fila, columna, false);
 
-                        // 💥 CORRECCIÓN CRUCIAL: Agregar un delay a la llamada recursiva para el siguiente impacto
+                        // Agregar un delay a la llamada recursiva para el siguiente impacto
                         PauseTransition delayEntreImpactos = new PauseTransition(Duration.millis(500));
                         delayEntreImpactos.setOnFinished(e -> turnoMaquina());
                         delayEntreImpactos.play();
@@ -873,7 +900,7 @@ public class JuegoController {
 
                         // 3. La máquina sigue disparando si el juego no terminó
                         if(juegoIniciado) {
-                            // 💥 CORRECCIÓN CRUCIAL: Agregar un delay a la llamada recursiva tras hundir
+                            // Agregar un delay a la llamada recursiva tras hundir
                             PauseTransition delayTrasHundir = new PauseTransition(Duration.millis(500));
                             delayTrasHundir.setOnFinished(e -> turnoMaquina());
                             delayTrasHundir.play();
@@ -890,8 +917,12 @@ public class JuegoController {
 
         delayPrincipal.play();
     }
+
     /**
-     * Encuentra una celda en el tablero del jugador por coordenadas.
+     * Encuentra una celda en el tablero del jugador por coordenadas (índice 0-9).
+     * @param fila Fila del tablero.
+     * @param columna Columna del tablero.
+     * @return El Pane de la celda.
      */
     private Pane encontrarCeldaTableroJugador(int fila, int columna) {
         return obtenerCelda(tableroJugador, fila, columna);
@@ -900,16 +931,23 @@ public class JuegoController {
     // ========== VERIFICACIÓN DE FIN DE JUEGO ==========
 
     /**
+     * Verifica si el juego ha terminado (si la flota del jugador o la máquina ha sido hundida).
+     */
+    /**
      * Verifica si el juego ha terminado.
+     */
+    /**
+     * Verifica si el juego ha terminado.
+     * Notifica al sistema de Observadores el resultado final (victoria o derrota).
      */
     private void verificarFinJuego() {
         if (maquina.haPerdido()) {
             juegoIniciado = false;
-            // NOTIFICAR FIN DEL JUEGO
+
+            // NOTIFICAR FIN DEL JUEGO: Esto activará el 'case "JUEGO_TERMINADO"' en ObservadorInterfaz,
+            // el cual ahora muestra la ventana Alert con el mensaje de victoria.
             juegoObservable.notificarJuegoTerminado("Jugador Humano");
-            mostrarAlerta(AlertType.INFORMATION, "¡FELICIDADES!",
-                    "🎉 ¡HAS GANADO! Hundiste toda la flota enemiga.\n\n" +
-                            "🎨 Has usado figuras 2D JavaFX para visualizar el juego.");
+
             System.out.println("🎉 ¡EL JUGADOR GANA!");
 
             // Mostrar estadísticas de la pila al final del juego
@@ -917,11 +955,11 @@ public class JuegoController {
 
         } else if (jugador.haPerdido()) {
             juegoIniciado = false;
-            // NOTIFICAR FIN DEL JUEGO
+
+            // NOTIFICAR FIN DEL JUEGO: Esto activará el 'case "JUEGO_TERMINADO"' en ObservadorInterfaz,
+            // el cual ahora muestra la ventana Alert con el mensaje de derrota.
             juegoObservable.notificarJuegoTerminado("Máquina");
-            mostrarAlerta(AlertType.INFORMATION, "FIN DEL JUEGO",
-                    "😢 La máquina ganó. Mejor suerte la próxima vez.\n\n" +
-                            "🎨 Has usado figuras 2D JavaFX para visualizar el juego.");
+
             System.out.println("😢 ¡LA MÁQUINA GANA!");
 
             // Mostrar estadísticas de la pila al final del juego
@@ -932,8 +970,12 @@ public class JuegoController {
     // ========== MÉTODOS DE ESTRUCTURA DE DATOS ==========
 
     /**
-     * Registra un movimiento en la pila de historial.
-     * Cumple con el requisito de usar estructura de datos.
+     * Registra un movimiento en la pila de historial (PilaMovimientos).
+     * @param jugador El jugador que realizó el movimiento.
+     * @param resultadoStr El resultado del disparo ("AGUA", "TOCADO", etc.).
+     * @param fila Fila del movimiento.
+     * @param col Columna del movimiento.
+     * @param esTurnoJugador Indica si fue el turno del jugador humano.
      */
     private void registrarMovimientoEnPila(Jugador jugador, String resultadoStr,
                                            int fila, int col, boolean esTurnoJugador) {
@@ -954,7 +996,7 @@ public class JuegoController {
             pilaMovimientos.apilar(movimiento);
 
             System.out.println("📝 Movimiento registrado en pila: " + movimiento);
-            System.out.println("   Tamaño pila: " + pilaMovimientos.tamanio() +
+            System.out.println("   tamanho pila: " + pilaMovimientos.tamanio() +
                     "/" + pilaMovimientos.getCapacidad());
 
             // Notificar a observadores
@@ -971,7 +1013,9 @@ public class JuegoController {
     }
 
     /**
-     * Convierte string de resultado a enum.
+     * Convierte la cadena de resultado a su equivalente Enum TipoResultado.
+     * @param resultadoStr La cadena de resultado.
+     * @return El enum TipoResultado correspondiente.
      */
     private TipoResultado convertirResultado(String resultadoStr) {
         switch (resultadoStr.toUpperCase()) {
@@ -985,8 +1029,7 @@ public class JuegoController {
     }
 
     /**
-     * Muestra el historial de movimientos.
-     * Para HU-5: análisis de partidas.
+     * Muestra el historial de los últimos 20 movimientos registrados en la pila.
      */
     @FXML
     private void mostrarHistorialMovimientos() {
@@ -1025,7 +1068,7 @@ public class JuegoController {
     }
 
     /**
-     * Muestra estadísticas de la pila (para depuración).
+     * Muestra estadísticas de la pila (conteo por resultado).
      */
     public void mostrarEstadisticasPila() {
         if (pilaMovimientos == null) {
@@ -1057,7 +1100,10 @@ public class JuegoController {
     // ========== MÉTODOS AUXILIARES ==========
 
     /**
-     * Muestra una alerta en pantalla.
+     * Muestra una alerta emergente en pantalla (usado para Historial y Fin de Juego).
+     * @param tipo Tipo de alerta (INFORMATION, WARNING, ERROR).
+     * @param titulo Título de la alerta.
+     * @param mensaje Contenido del mensaje.
      */
     private void mostrarAlerta(AlertType tipo, String titulo, String mensaje) {
         Alert alert = new Alert(tipo);
@@ -1069,6 +1115,10 @@ public class JuegoController {
 
     // ========== BOTONES DE CONTROL ==========
 
+    /**
+     * Inicia la fase de disparos si todos los barcos han sido colocados.
+     * Deshabilita el panel de colocación.
+     */
     @FXML
     private void iniciarJuego() {
         if (!jugador.todosBarcosColocados()) {
@@ -1077,6 +1127,7 @@ public class JuegoController {
             juegoObservable.notificarError("Intento de iniciar juego con barcos incompletos");
             return;
         }
+
 
         juegoIniciado = true;
         turnoJugador = true;
@@ -1090,22 +1141,49 @@ public class JuegoController {
 
         mostrarAlerta(AlertType.INFORMATION, "¡COMIENZA EL JUEGO!",
                 "El juego ha comenzado. ¡Buena suerte!\n\n" +
-                        "Tu turno: Haz clic en el tablero de la derecha para disparar.\n" +
-                        "🎨 Nota: El juego ahora usa figuras 2D JavaFX para mejor visualización.");
+                        "Tu turno: Haz clic en el tablero de la derecha para disparar.\n");
 
         System.out.println("🎮 ¡JUEGO INICIADO!");
         System.out.println("🔫 Turno del jugador");
         System.out.println("🎨 Figuras 2D JavaFX activadas");
     }
 
+    /**
+     * Muestra el tablero completo del oponente (solo visible antes de iniciar el juego).
+     */
     @FXML
     private void mostrarTableroOponente() {
         // HU-3: Visualización del tablero del oponente (para profesor)
         if (!juegoIniciado) {
             String tableroCompleto = maquina.mostrarTableroConBarcos();
-            mostrarAlerta(AlertType.INFORMATION, "Tablero de la Máquina",
-                    "Esta vista es solo para verificación del profesor:\n\n" + tableroCompleto +
-                            "\n\n🎨 Implementación con figuras 2D JavaFX completa.");
+
+            // =================================================================
+            // CAMBIO CLAVE: Crear Alert manualmente para aplicar estilo monoespaciado
+            // =================================================================
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Tablero de la Máquina");
+            alert.setHeaderText("Esta vista es solo para verificación De Los Barcos Enemigos:");
+
+            // Crea un Label para contener el texto del tablero
+            Label contentLabel = new Label(tableroCompleto);
+
+            // ** Aplicar estilo CSS para forzar una fuente monoespaciada **
+            contentLabel.setStyle("-fx-font-family: 'Courier New', Monospaced; -fx-font-size: 14px;");
+
+            // Envolver el Label en un contenedor para que se muestre correctamente
+            VBox dialogContent = new VBox(10);
+            dialogContent.getChildren().add(contentLabel);
+
+            // Establecer el contenido gráfico del Alert
+            alert.getDialogPane().setContent(dialogContent);
+
+            // Ajustar el tamaño del diálogo para que quepa el tablero
+            alert.getDialogPane().setPrefWidth(350);
+            alert.getDialogPane().setPrefHeight(350);
+
+            alert.showAndWait();
+            // =================================================================
+
             juegoObservable.notificarObservadores(
                     JuegoObservable.INFORMACION,
                     null,
@@ -1113,11 +1191,15 @@ public class JuegoController {
             );
             System.out.println("👁️ Mostrando tablero de la máquina (HU-3) con figuras 2D");
         } else {
+            // Mantener la alerta de advertencia simple
             mostrarAlerta(AlertType.WARNING, "No disponible",
                     "Esta opción solo está disponible antes de iniciar el juego.");
         }
     }
 
+    /**
+     * Reinicia el juego, reestablece los jugadores, limpia los tableros y recrea los barcos.
+     */
     @FXML
     private void reiniciarJuego() {
         // NOTIFICAR REINICIO
@@ -1164,6 +1246,7 @@ public class JuegoController {
 
     /**
      * Limpia el tablero visual (VERSIÓN ANTIGUA).
+     * @param tablero El GridPane a limpiar.
      */
     private void limpiarTableroVisual(GridPane tablero) {
         for (javafx.scene.Node node : tablero.getChildren()) {
@@ -1177,7 +1260,8 @@ public class JuegoController {
     }
 
     /**
-     * Limpia el tablero visual con FIGURAS 2D (NUEVA VERSIÓN).
+     * Limpia el tablero visual y recrea la figura 2D de celda vacía en cada Pane.
+     * @param tablero El GridPane a limpiar.
      */
     private void limpiarTableroVisualFiguras(GridPane tablero) {
         for (javafx.scene.Node node : tablero.getChildren()) {
